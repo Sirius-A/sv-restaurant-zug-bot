@@ -3,6 +3,7 @@
 const Telegram = require('telegram-node-bot');
 const TelegramBaseController = Telegram.TelegramBaseController;
 const tg = new Telegram.Telegram('BotFatherKey');
+const TextCommand = Telegram.TextCommand;
 const request = require('request');
 const cheerio = require('cheerio');
 
@@ -15,8 +16,10 @@ class MenuController extends TelegramBaseController {
             let offers = $('.offer');
             var text = '';
             $(offers).each(function(i, offer) {
-                text += '_' + $(offer).find('.offer-description').text().trim() + '_\n';
-                text += $(offer).find('.menu-description .title').text() + ' - ' + $(offer).find('.menu-description .trimmings').text() + '\n\n'
+                text += '*' + $(offer).find('.offer-description').text().trim() + ': ' ;
+                text += $(offer).find('.menu-description .title').text() + '*\n';
+                text += $(offer).find('.menu-description .trimmings').text() + '\n';
+                text += '_' + $(offer).find('.price .price-item').text() + '_\n\n'
             });
             callback(text)
         });
@@ -26,19 +29,21 @@ class MenuController extends TelegramBaseController {
         const self = this;
         var response = '';
         self.parse('menuplan.html', function(text) {
-            response += '*Five Moods*\n';
             response += text;
-            response = response.replace('`', '');
+            response = response.replace(/`/g, '' );
             $.sendMessage(response, { parse_mode: 'Markdown'});
         })
     }
 
     get routes() {
         return {
-            'get': 'menuHandler'
+            'getToday': 'menuHandler'
         }
     }
 }
 
 tg.router
-    .when(['get'], new MenuController());
+    .when(
+        new TextCommand('get', 'getToday'),
+        new MenuController()
+    );
