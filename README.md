@@ -1,11 +1,10 @@
-# sv-restaurant-zug-bot
+# SV restaurant zug bot (@FiveMoodsBot)
 Telegram bot to retrieve the menu of the SV restaurant in Zug (called Five Moods)
 
-## Try it 
-Add the bot using http://telegram.me/FiveMoodsBot and call `/get@FiveMoodsBot` to recieve todays menu.
+# Try it 
+Add the bot using http://telegram.me/FiveMoodsBot and call `/get@FiveMoodsBot` to receive today's menu.
 
-If you want the bot to send you the menu regularly, try  `/getDaily@FiveMoodsBot` or  `/getPartTime@FiveMoodsBot`.
-
+If you want the bot to send you the menu regularly, try  `/getDaily@FiveMoodsBot` or `/getPartTime@FiveMoodsBot`.
 
 # Develop
 1. To host a similar bot like this, clone this repo:
@@ -42,7 +41,7 @@ If you want the bot to send you the menu regularly, try  `/getDaily@FiveMoodsBot
     ```
 
 ## Credits and Thanks
-[Roman Blum](https://github.com/rmnblm/) for creating the [hsr-lunchbot](hsr-lunchbot), which was used as a starting point for this bot
-
+ * [Roman Blum](https://github.com/rmnblm/) for creating the [hsr-lunchbot](hsr-lunchbot), which was used as a starting point for this project.
+   
 ## Disclaimer
 This bot and I are not affiliated with SV Groups in any way. This bot is not officially supported by SV.
