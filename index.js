@@ -2,8 +2,9 @@
 
 const Telegram = require('telegram-node-bot');
 const TelegramBaseController = Telegram.TelegramBaseController;
-const tg = new Telegram.Telegram('BotFatherKey');
 const TextCommand = Telegram.TextCommand;
+const bot_api_token = process.env.bot_token;
+const tg = new Telegram.Telegram(bot_api_token);
 const request = require('request');
 const cheerio = require('cheerio');
 

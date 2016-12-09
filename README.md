@@ -29,8 +29,11 @@ If you want the bot to send you the menu regularly, try  `/getDaily@FiveMoodsBot
 4. Once you’re satisfied with the behavior, commit all your files and deploy the app to a node provider of your choice. Below are the steps required  for Heroku.
 
     ```
-    $ heroku create
-    Creating app... done, ⬢ radiant-refuge-28891
+    $ heroku create five-moods-telegram-bot --region eu
+    Creating five-moods-telegram-bot... done, region is eu
+        
+    $ heroku git:remote -a five-moods-telegram-bot
+    
     $ git push heroku master
     ```
 
