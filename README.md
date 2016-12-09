@@ -26,8 +26,7 @@ If you want the bot to send you the menu regularly, try  `/getDaily@FiveMoodsBot
     $ node index.js
     ```
 
-4. Once you’re satisfied with the behavior, commit all your files and deploy the app to a node hoster of your choice.
-Heroku
+4. Once you’re satisfied with the behavior, commit all your files and deploy the app to a node provider of your choice. Below are the steps required  for Heroku.
 
     ```
     $ heroku create
