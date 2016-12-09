@@ -1,5 +1,5 @@
 # SV restaurant zug bot (@FiveMoodsBot)
-Telegram bot to retrieve the menu of the SV restaurant in Zug (called Five Moods)
+A Telegram bot to retrieve the menu of the SV restaurant in Zug (called Five Moods).
 
 # Try it 
 Add the bot using http://telegram.me/FiveMoodsBot and call `/get@FiveMoodsBot` to receive today's menu.
@@ -19,14 +19,15 @@ If you want the bot to send you the menu regularly, try  `/getDaily@FiveMoodsBot
     $ npm install
     ```
 
-3. Adjust the code and set the API token for your own bot. Talk to the [BotFather](https://telegram.me/BotFather) for that.
+3. Adjust the code and set the API token to your own bot. Talk to the [BotFather](https://telegram.me/BotFather) for that.
     To run the bot on your machine run
 
     ```
     $ node index.js
     ```
 
-4. Once you’re satisfied with the behavior, commit all your files and deploy the app to Heroku
+4. Once you’re satisfied with the behavior, commit all your files and deploy the app to a node hoster of your choice.
+Heroku
 
     ```
     $ heroku create
@@ -42,6 +43,8 @@ If you want the bot to send you the menu regularly, try  `/getDaily@FiveMoodsBot
 
 ## Credits and Thanks
  * [Roman Blum](https://github.com/rmnblm/) for creating the [hsr-lunchbot](hsr-lunchbot), which was used as a starting point for this project.
-   
+ * [Narek Abovyan](https://github.com/Naltox) for his [telegram-node-bot](https://github.com/Naltox/telegram-node-bot).
+ * You for using this bot and thereby giving it a purpose in its ~~life~~ operation :heart:.
+ 
 ## Disclaimer
-This bot and I are not affiliated with SV Groups in any way. This bot is not officially supported by SV.
+This bot (and I :stuck_out_tongue_winking_eye:) are not affiliated with SV Groups in any way. This bot is not officially supported by SV.
