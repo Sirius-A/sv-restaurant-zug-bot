@@ -1,5 +1,6 @@
 # SV restaurant zug bot (@FiveMoodsBot)
-[![Build Status](https://travis-ci.org/Sirius-A/sv-restaurant-zug-bot.svg?branch=master)](https://travis-ci.org/Sirius-A/sv-restaurant-zug-bot) [![dependencies Status](https://david-dm.org/Sirius-A/sv-restaurant-zug-bot/status.svg)](https://david-dm.org/Sirius-A/sv-restaurant-zug-bot) 
+[![Build Status](https://travis-ci.org/Sirius-A/sv-restaurant-zug-bot.svg?branch=master)](https://travis-ci.org/Sirius-A/sv-restaurant-zug-bot) [![dependencies Status](https://david-dm.org/Sirius-A/sv-restaurant-zug-bot/status.svg)](https://david-dm.org/Sirius-A/sv-restaurant-zug-bot) [![devDependencies Status](https://david-dm.org/Sirius-A/sv-restaurant-zug-bot/dev-status.svg)](https://david-dm.org/Sirius-A/sv-restaurant-zug-bot?type=dev) 
+
 A Telegram bot to retrieve the menu of the SV restaurant in Zug (called Five Moods).
 
 # Try it 
