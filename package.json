@@ -27,12 +27,15 @@
     "telegram-node-bot": "^4.0.5"
   },
   "devDependencies": {
+    "chai": "^3.5.0",
     "glob": "^7.1.1",
     "jshint": "^2.9.4",
-    "jshint-stylish": "^2.2.1"
+    "jshint-stylish": "^2.2.1",
+    "mocha": "^3.2.0"
   },
   "jshintConfig": {
     "esversion": 6,
-    "node": true
+    "node": true,
+    "mocha": true
   }
 }
