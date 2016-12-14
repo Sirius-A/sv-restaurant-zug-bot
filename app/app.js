@@ -9,8 +9,7 @@ const cheerio = require('cheerio');
 
 class MealsController extends TelegramBaseController {
     parse(url, callback) {
-        const baseURL = 'http://siemens.sv-restaurant.ch/de/';
-        request(baseURL + url, function(err, resp, body){
+        request(url, function(err, resp, body){
             let $ = cheerio.load(body);
             let offers = $('.offer');
             var text = '';
@@ -28,10 +27,10 @@ class MealsController extends TelegramBaseController {
 
     mealsHandler($) {
         const self = this;
-        var response = '';
-        self.parse('menuplan.html', function(text) {
-            response += text;
-            $.sendMessage(response, { parse_mode: 'Markdown'});
+        const url = 'http://siemens.sv-restaurant.ch/de/menuplan.html';
+
+        self.parse(url, function(text) {
+            $.sendMessage(text, { parse_mode: 'Markdown'});
         });
     }
 
@@ -66,3 +65,5 @@ tg.router
         new TextCommand('/start', 'startHandler'),
         new StartController()
     );
+
+module.exports.MealsController = MealsController;
