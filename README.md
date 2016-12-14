@@ -19,25 +19,30 @@ If you want the bot to send you the menu regularly, try  `/getDaily@FiveMoodsBot
     $ npm install
     ```
 
-3. Adjust the code and set the API token to your own bot. Talk to the [BotFather](https://telegram.me/BotFather) for that.
-    To run the bot on your machine run
+3. To start the bot you will need an Telegram API token. Talk to the [BotFather](https://telegram.me/BotFather) for that.
+    Once you received your token, pass to the `BOT_API_TOKEN` environment variable. 
+    This can be done in the run config of your IDE or directly in the console.
 
     ```
-    $ node index.js
+    $ BOT_API_TOKEN='MY_SUP3R:SEC|2ET_4PI_T0K3N' node index.js
     ```
 
-4. Once you’re satisfied with the behavior, commit all your files and deploy the app to a node provider of your choice. Below are the steps required  for Heroku.
+5. Once you’re satisfied with the behavior, commit all your files and deploy the app to a node.js provider of your choice. 
+Below are the steps required for [Heroku](www.heroku.com).
 
     ```
     $ heroku create five-moods-telegram-bot --region eu
     Creating five-moods-telegram-bot... done, region is eu
-        
+    
+    $ heroku config:set BOT_API_TOKEN=MY_SUP3R:SEC|2ET_4PI_T0K3N
+    Setting BOT_API_TOKEN and restarting five-moods-telegram-bot... done, v6
+    
     $ heroku git:remote -a five-moods-telegram-bot
     
     $ git push heroku master
     ```
 
-5. Run the following command to avoid the error log message `Error R10 (Boot timeout) -> Web process failed to bind to $PORT within 60 seconds of launch`:
+6. Run the following command to avoid the error log message `Error R10 (Boot timeout) -> Web process failed to bind to $PORT within 60 seconds of launch`:
 
     ```
     $ heroku scale web=0 worker=1

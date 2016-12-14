@@ -1,15 +1,13 @@
 'use strict';
-
 const Telegram = require('telegram-node-bot');
 const TelegramBaseController = Telegram.TelegramBaseController;
 const TextCommand = Telegram.TextCommand;
-const bot_api_token = process.env.bot_token;
+const bot_api_token = process.env.BOT_API_TOKEN;
 const tg = new Telegram.Telegram(bot_api_token);
 const request = require('request');
 const cheerio = require('cheerio');
 
 class MealsController extends TelegramBaseController {
-
     parse(url, callback) {
         const baseURL = 'http://siemens.sv-restaurant.ch/de/';
         request(baseURL + url, function(err, resp, body){
@@ -20,11 +18,11 @@ class MealsController extends TelegramBaseController {
                 text += '*' + $(offer).find('.offer-description').text().trim() + ': ' ;
                 text += $(offer).find('.menu-description .title').text() + '*\n';
                 text += $(offer).find('.menu-description .trimmings').text() + '\n';
-                text += '_' + $(offer).find('.price .price-item').text() + '_\n\n'
+                text += '_' + $(offer).find('.price .price-item').text() + '_\n\n';
             });
 
             text = text.replace(/`/g, '' );
-            callback(text)
+            callback(text);
         });
     }
 
@@ -34,13 +32,13 @@ class MealsController extends TelegramBaseController {
         self.parse('menuplan.html', function(text) {
             response += text;
             $.sendMessage(response, { parse_mode: 'Markdown'});
-        })
+        });
     }
 
     get routes() {
         return {
             'getToday': 'mealsHandler'
-        }
+        };
     }
 }
 
@@ -48,14 +46,14 @@ class StartController extends TelegramBaseController {
     /**
      * @param {Scope} $
      */
-    start($) {
-        $.sendMessage('Hello! \n I can send you the menu for the SV restaurant in Zug. \n Try /get or /getDaily (for daily updates)')
+    static start($) {
+        $.sendMessage('Hello! \n I can send you the menu for the SV restaurant in Zug. \n Try /get or /getDaily (for daily updates)');
     }
 
     get routes() {
         return {
             'startHandler': 'start'
-        }
+        };
     }
 }
 
