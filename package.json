@@ -7,7 +7,8 @@
   },
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node src/index.js",
+    "lint": "jshint --reporter=node_modules/jshint-stylish src"
   },
   "repository": {
     "type": "git",
@@ -23,5 +24,14 @@
     "cheerio": "^0.22.0",
     "request": "^2.75.0",
     "telegram-node-bot": "^4.0.5"
+  },
+  "devDependencies": {
+    "glob": "^7.1.1",
+    "jshint": "^2.9.4",
+    "jshint-stylish": "^2.2.1"
+  },
+  "jshintConfig": {
+    "esversion": 6,
+    "node": true
   }
 }
