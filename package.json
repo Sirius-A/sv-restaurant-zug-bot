@@ -7,8 +7,9 @@
   },
   "main": "index.js",
   "scripts": {
-    "start": "node src/index.js",
-    "lint": "jshint --reporter=node_modules/jshint-stylish src",
+    "start": "node app/index.js",
+    "lint": "jshint --reporter=node_modules/jshint-stylish app",
+    "test": "mocha test/",
     "pretest": "npm run lint"
   },
   "repository": {
