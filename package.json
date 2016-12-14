@@ -13,8 +13,8 @@
     "type": "git",
     "url": "git+https://github.com/Sirius-A/sv-restaurant-zug-bot.git"
   },
-  "author": "Roman Blum <rmnblm@gmail.com> (http://rmnblm.com)",
-  "license": "WTFPL",
+  "author": "Fabio Zuber",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/Sirius-A/sv-restaurant-zug-bot/issues"
   },
@@ -22,6 +22,6 @@
   "dependencies": {
     "cheerio": "^0.22.0",
     "request": "^2.75.0",
-    "telegram-node-bot": "^4.0.4"
+    "telegram-node-bot": "^4.0.5"
   }
 }
