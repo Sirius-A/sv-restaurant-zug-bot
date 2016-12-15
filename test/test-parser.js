@@ -5,7 +5,7 @@ const cheerio = require("cheerio/lib/static.js");
 const MealsController = require('../app/app');
 
 
-describe('The sv page parer module', function(){
+describe('The sv page formatting module', function(){
     it('formats the menuplan page of 2016-02-14 correctly',function() {
         let markdownTextExpected = `*chefs choice: Knusprig gebratene Entenbrust*
 an Balsamicojus
@@ -41,8 +41,25 @@ _CHF 14.90_
 
         let $ = cheerio.load(fs.readFileSync(menuplanPath));
         let markdownTextActual = mealsController.formatMessage($);
-
         assert.equal(markdownTextActual, markdownTextExpected, "Page is formatted to the correct markdown");
+    });
+
+    it('escapes replaces markdown syntax characters',function () {
+
+        let mealsController = new MealsController.MealsController();
+        let $ = cheerio.load("<div class='offer'>" +
+            "<p class='offer-description'>daily`s:</p> " +
+            "<div class='menu-description'><p class='title'>Super-Duper Menu</p></div>" +
+            "<div class='menu-description'><p class='trimmings'>A multi line, <br\>" +
+            "dish</p></div>" +
+            "<div class='price'><span class='price-item'>CHF 16.90</span></div>" +
+            "</div>"
+        );
+        let markdownTextExpected = "*dailys:: Super-Duper Menu*\n" +
+            "A multi line, dish\n" +
+            "_CHF 16.90_\n\n";
+        let markdownTextActual = mealsController.formatMessage($);
+        assert.equal(markdownTextActual, markdownTextExpected, "escapes the relevant ");
     });
 });
 
