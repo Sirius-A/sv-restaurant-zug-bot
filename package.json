@@ -3,11 +3,11 @@
   "version": "0.1.0",
   "description": "A Telegram bot to retrieve the menu of the SV restaurant in Zug (called Five Moods)",
   "engines": {
-    "node": "6.9.2"
+    "node": ">=6.0.0"
   },
   "main": "index.js",
   "scripts": {
-    "start": "node app/index.js",
+    "start": "node app/app.js",
     "lint": "jshint --reporter=node_modules/jshint-stylish app",
     "test": "mocha test/",
     "pretest": "npm run lint"

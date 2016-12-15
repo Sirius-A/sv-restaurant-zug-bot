@@ -1,7 +1,14 @@
 language: node_js
-  - "7"
-  - "6"
-before_script:
+
+node_js:
+  - 7
+  - 6
+
+before_install:
+  - npm --version
+
+install:
   - npm install
+
 script:
- - npm run lint
+ - npm test
