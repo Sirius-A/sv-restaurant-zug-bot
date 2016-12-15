@@ -9,20 +9,29 @@ const cheerio = require('cheerio');
 
 class MealsController extends TelegramBaseController {
     parse(url, callback) {
+        const self = this;
         request(url, function(err, resp, body){
+            console.log("request");
             let $ = cheerio.load(body);
-            let offers = $('.offer');
-            var text = '';
-            $(offers).each(function(i, offer) {
-                text += '*' + $(offer).find('.offer-description').text().trim() + ': ' ;
-                text += $(offer).find('.menu-description .title').text() + '*\n';
-                text += $(offer).find('.menu-description .trimmings').text() + '\n';
-                text += '_' + $(offer).find('.price .price-item').text() + '_\n\n';
-            });
-
-            text = text.replace(/`/g, '' );
-            callback(text);
+            let message = self.formatMessage($);
+            callback(message);
         });
+    }
+
+    formatMessage($) {
+        let offers = $('.offer');
+        var text = '';
+        $(offers).each(function (i, offer) {
+            text += '*' + $(offer).find('.offer-description').text().trim() + ': ';
+            text += $(offer).find('.menu-description .title').text() + '*\n';
+            text += $(offer).find('.menu-description .trimmings').text() + '\n';
+            text += '_' + $(offer).find('.price .price-item').text() + '_\n\n';
+        });
+
+        //get rid of special chars that mess with markdown formatting
+        text = text.replace(/`/g, '');
+
+        return text;
     }
 
     mealsHandler($) {
