@@ -36,7 +36,7 @@ und Gemüse Ragout
 _CHF 14.90_
 
 `;
-        let menuplanPath = __dirname + "\\menuplan2016-02-14.html";
+        let menuplanPath = __dirname + "/menuplan2016-02-14.html";
         let mealsController = new MealsController.MealsController();
 
         let $ = cheerio.load(fs.readFileSync(menuplanPath));
