@@ -45,15 +45,15 @@ _CHF 14.90_
         assert.equal(markdownTextActual, markdownTextExpected, "Page is formatted to the correct markdown");
     });
 
-    it('escapes replaces markdown syntax characters',function () {
+    it('replaces markdown syntax characters in the menu',function () {
 
         let svPageParser = new SVPageParser();
         let $ = cheerio.load("<div class='offer'>" +
             "<p class='offer-description'>daily`s:</p> " +
             "<div class='menu-description'><p class='title'>Super-Duper Menu</p></div>" +
-            "<div class='menu-description'><p class='trimmings'>A multi line, <br\>" +
-            "dish</p></div>" +
-            "<div class='price'><span class='price-item'>CHF 16.90</span></div>" +
+            "<div class='menu-description'><p class='trimmings'>A multi line*, <br\>" +
+            "*dish</p></div>" +
+            "<div class='price'><span class='price-item'>#CHF 16.90_</span></div>" +
             "</div>"
         );
         let markdownTextExpected = "*dailys:: Super-Duper Menu*\n" +

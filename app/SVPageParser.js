@@ -16,17 +16,19 @@ class SVPageParser{
         let offers = $('.offer');
         var text = '';
         $(offers).each(function (i, offer) {
-            text += '*' + $(offer).find('.offer-description').text().trim() + ': ';
-            text += $(offer).find('.menu-description .title').text() + '*\n';
-            text += $(offer).find('.menu-description .trimmings').text() + '\n';
-            text += '_' + $(offer).find('.price .price-item').text() + '_\n\n';
+            text += '*' + replaceMarkdownCharacters($(offer).find('.offer-description').text().trim()) + ': ';
+            text += replaceMarkdownCharacters($(offer).find('.menu-description .title').text()) + '*\n';
+            text += replaceMarkdownCharacters($(offer).find('.menu-description .trimmings').text())  + '\n';
+            text += '_' + replaceMarkdownCharacters($(offer).find('.price .price-item').text())  + '_\n\n';
         });
 
-        //get rid of special chars that mess with markdown formatting
-        text = text.replace(/`/g, '');
+        function replaceMarkdownCharacters(text){
+            return(text.replace(/`|\*|_|#/g, ''));
+        }
 
         return text;
     }
+
 }
 
 module.exports = SVPageParser;
