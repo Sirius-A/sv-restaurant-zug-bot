@@ -2,7 +2,7 @@
 const assert = require('assert');
 const fs = require('fs');
 const cheerio = require("cheerio/lib/static.js");
-const MealsController = require('../app/app');
+const SVPageParser = require('../app/SVPageParser');
 
 
 describe('The sv page formatting module', function(){
@@ -37,16 +37,17 @@ _CHF 14.90_
 
 `;
         let menuplanPath = __dirname + "/menuplan2016-02-14.html";
-        let mealsController = new MealsController.MealsController();
+        let svPageParser = new SVPageParser();
+
 
         let $ = cheerio.load(fs.readFileSync(menuplanPath));
-        let markdownTextActual = mealsController.formatMessage($);
+        let markdownTextActual = svPageParser.formatMessage($);
         assert.equal(markdownTextActual, markdownTextExpected, "Page is formatted to the correct markdown");
     });
 
     it('escapes replaces markdown syntax characters',function () {
 
-        let mealsController = new MealsController.MealsController();
+        let svPageParser = new SVPageParser();
         let $ = cheerio.load("<div class='offer'>" +
             "<p class='offer-description'>daily`s:</p> " +
             "<div class='menu-description'><p class='title'>Super-Duper Menu</p></div>" +
@@ -58,7 +59,7 @@ _CHF 14.90_
         let markdownTextExpected = "*dailys:: Super-Duper Menu*\n" +
             "A multi line, dish\n" +
             "_CHF 16.90_\n\n";
-        let markdownTextActual = mealsController.formatMessage($);
+        let markdownTextActual = svPageParser.formatMessage($);
         assert.equal(markdownTextActual, markdownTextExpected, "escapes the relevant ");
     });
 });
