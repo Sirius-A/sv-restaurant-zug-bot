@@ -16,14 +16,14 @@ class SVPageParser{
         let offers = $('.offer');
         var text = '';
         $(offers).each(function (i, offer) {
-            text += '*' + replaceMarkdownCharacters($(offer).find('.offer-description').text().trim()) + ': ';
-            text += replaceMarkdownCharacters($(offer).find('.menu-description .title').text()) + '*\n';
-            text += replaceMarkdownCharacters($(offer).find('.menu-description .trimmings').text())  + '\n';
-            text += '_' + replaceMarkdownCharacters($(offer).find('.price .price-item').text())  + '_\n\n';
+            text += '*' + removeSpecialCharacters($(offer).find('.offer-description').text().trim()) + ': ';
+            text += removeSpecialCharacters($(offer).find('.menu-description .title').text()) + "*\n";
+            text += removeSpecialCharacters($(offer).find('.menu-description .trimmings').text())  + "\n";
+            text += '_' + removeSpecialCharacters($(offer).find('.price .price-item').text())  + "_\n\n";
         });
 
-        function replaceMarkdownCharacters(text){
-            return(text.replace(/`|\*|_|#/g, ''));
+        function removeSpecialCharacters(text){
+            return(text.replace(/`|\*|_|#|\r/g, ''));
         }
 
         return text;
