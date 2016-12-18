@@ -8,6 +8,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node app/app.js",
+    "start-debug": "node --debug-brk app/app.js",
     "lint": "jshint --reporter=node_modules/jshint-stylish app",
     "test": "mocha test/",
     "pretest": "npm run lint"
@@ -24,6 +25,8 @@
   "homepage": "https://github.com/Sirius-A/sv-restaurant-zug-bot/readme",
   "dependencies": {
     "cheerio": "^0.22.0",
+    "co": "^4.6.0",
+    "mongodb": "^2.2.16",
     "node-telegram-bot-api": "^0.24.0",
     "request": "^2.75.0"
   },
