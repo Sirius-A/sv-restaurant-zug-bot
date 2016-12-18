@@ -1,50 +1,36 @@
 'use strict';
-const Telegram = require('telegram-node-bot');
-const TelegramBaseController = Telegram.TelegramBaseController;
-const TextCommand = Telegram.TextCommand;
+const TelegramBot = require('node-telegram-bot-api');
 const bot_api_token = process.env.BOT_API_TOKEN;
-const tg = new Telegram.Telegram(bot_api_token);
+const tgBot  = new TelegramBot(bot_api_token, { polling: true });
 const Parser = require('./SVPageParser');
 
-class MealsController extends TelegramBaseController {
+/* Routes */
+tgBot.onText(/\/get(Today)?/,getTodayHandler);
+tgBot.onText(/\/getDaily/,getDailyHandler);
+tgBot.onText(/\/start/,startHandler);
 
-    mealsHandler($) {
-        const parser = new Parser();
-        const url = 'http://siemens.sv-restaurant.ch/de/menuplan.html';
 
-        parser.parse(url, function(text) {
-            $.sendMessage(text, { parse_mode: 'Markdown'});
-        });
-    }
+/* Handlers */
+function getTodayHandler(message) {
+    const parser = new Parser();
+    const url = 'http://siemens.sv-restaurant.ch/de/menuplan.html';
+    let chatId = message.chat.id;
 
-    get routes() {
-        return {
-            'getToday': 'mealsHandler'
-        };
-    }
+    parser.parse(url, function (markdownText) {
+        tgBot.sendMessage(chatId,markdownText,{ parse_mode: 'Markdown'});
+    });
 }
 
-class StartController extends TelegramBaseController {
-    /**
-     * @param {Scope} $
-     */
-    static start($) {
-        $.sendMessage('Hello! \n I can send you the menu for the SV restaurant in Zug. \n Try /get or /getDaily (for daily updates)');
-    }
+function getDailyHandler(message) {
+    let chatId = message.chat.id;
 
-    get routes() {
-        return {
-            'startHandler': 'start'
-        };
-    }
 }
 
-tg.router
-    .when(
-        new TextCommand('get', 'getToday'),
-        new MealsController()
-    )
-    .when(
-        new TextCommand('/start', 'startHandler'),
-        new StartController()
-    );
+function startHandler(message) {
+    let chatId = message.chat.id;
+
+    var markdownText = 'Hello! \n' +
+        'I can send you the menu for the SV restaurant in Zug. \n' +
+        'try /get or /getDaily (for daily updates)';
+    tgBot.sendMessage(chatId,markdownText,{ parse_mode: 'Markdown'});
+}

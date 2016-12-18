@@ -24,8 +24,8 @@
   "homepage": "https://github.com/Sirius-A/sv-restaurant-zug-bot/readme",
   "dependencies": {
     "cheerio": "^0.22.0",
-    "request": "^2.75.0",
-    "telegram-node-bot": "^4.0.5"
+    "node-telegram-bot-api": "^0.24.0",
+    "request": "^2.75.0"
   },
   "devDependencies": {
     "chai": "^3.5.0",
