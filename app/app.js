@@ -8,7 +8,7 @@ const Parser = require('./SVPageParser');
 const Subscriptions = require('./subscriptions');
 
 /* Daily cronjob to notify subscribers*/
-var job = new cron.CronJob('00 00 09 * * 1-5', function () {
+var job = new cron.CronJob('0 18 * * 1-5', function () {
     console.log('Cron job started');
     notifySubscribers();
 }, null, true);
