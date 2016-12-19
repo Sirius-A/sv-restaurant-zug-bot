@@ -1,8 +1,7 @@
 'use strict';
 var mongodb_uri = process.env.MONGODB_URI;
 var MongoClient = require('mongodb').MongoClient,
-    co = require('co'),
-    assert = require('assert');
+    co = require('co');
 
 class Subscriptions{
 
@@ -12,7 +11,7 @@ class Subscriptions{
             var db = yield MongoClient.connect(mongodb_uri);
             console.log("Connected correctly to server");
 
-            // Insert a single document
+            // Insert/update a single document
             yield db.collection('subscribers').updateOne(
                 {id:chat.id},
                 {$set:{'firstname': chat.first_name, 'lastname': chat.last_name, 'type': chat.type, 'username': chat.username }},
@@ -47,17 +46,16 @@ class Subscriptions{
     }
 
     forAll(callback){
-        let subscriberCollection = co(function*() {
+        co(function*() {
             //connect to db
             var db = yield MongoClient.connect(mongodb_uri);
             console.log("Connected correctly to server");
 
             // delete a single document
-            let subscriberCollection = yield db.collection('subscribers').find().forEach(callback);
+            yield db.collection('subscribers').find().forEach(callback);
 
             // Close connection
             db.close();
-
         }).catch(function(err) {
             console.log(err.stack);
         });

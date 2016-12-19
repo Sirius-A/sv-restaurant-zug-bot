@@ -8,7 +8,7 @@ const Parser = require('./SVPageParser');
 const Subscriptions = require('./subscriptions');
 
 /* Daily cronjob to notify subscribers*/
-var job = new cron.CronJob('52 22 * * 1-5', function () {
+var job = new cron.CronJob('00 10 * * 1-5', function () {
     console.log('Cron job started');
     notifySubscribers();
 }, null, true,'Europe/Zurich');
@@ -16,10 +16,11 @@ var job = new cron.CronJob('52 22 * * 1-5', function () {
 /* Routes */
 tgBot.onText(/\/get(Today)?$/mg,getTodayHandler);
 tgBot.onText(/\/getDaily/,getDailyHandler);
+tgBot.onText(/\/getPartTime/,getPartTimeHandler);
 tgBot.onText(/\/start/,startHandler);
 tgBot.onText(/\/stop/,cancelSubscriptionsHandler);
 tgBot.onText(/\/cancel/,cancelSubscriptionsHandler);
-tgBot.onText(/\/notify/,notifySubscribers);
+tgBot.onText(/\/(get)?source/mg,getSourceHandler);
 
 /* Handlers */
 function sendTodaysMenu(chatId) {
@@ -27,7 +28,6 @@ function sendTodaysMenu(chatId) {
     const parser = new Parser();
 
     parser.parse(url, function (markdownText) {
-        markdownText += "Test message please ignore";
         tgBot.sendMessage(chatId, markdownText, {parse_mode: 'Markdown'});
     });
 }
@@ -43,9 +43,17 @@ function getDailyHandler(message) {
     const subscriptions = new Subscriptions();
     subscriptions.add(chat,function () {
         let markdownText = "*Successfully added you to the daily subscriber list* \n" +
-            "I will send you the menu at 10:00am from now on.";
+            "I will send you the menu at 10:00am from now on. You can send me /stop to cancel the daily update.";
         tgBot.sendMessage(chatId,markdownText,{ parse_mode: 'Markdown'});
     });
+}
+
+function getPartTimeHandler(message) {
+    let chatId = message.chat.id;
+
+    let markdownText = "This feature is not implemented yet.";
+    tgBot.sendMessage(chatId,markdownText,{ parse_mode: 'Markdown'});
+
 }
 
 function cancelSubscriptionsHandler(message) {
@@ -55,7 +63,7 @@ function cancelSubscriptionsHandler(message) {
     const subscriptions = new Subscriptions();
     subscriptions.remove(chat,function () {
         let markdownText = "*Successfully removed you from the daily subscriber list* \n" +
-            "I will no longer bother you";
+            "I will no longer bother you with daily updates.";
         tgBot.sendMessage(chatId,markdownText,{ parse_mode: 'Markdown'});
     });
 }
@@ -71,8 +79,17 @@ function startHandler(message) {
 
 function notifySubscribers() {
     var subscriptions = new Subscriptions();
+
     console.log("notify Subscribers called");
     subscriptions.forAll(function (subscriber) {
             sendTodaysMenu(subscriber.id);
     });
+}
+
+function getSourceHandler(message){
+    let chatId = message.chat.id;
+
+    let markdownText = 'This bot is written by Fabio Zuber utilizing Node.js.\n' +
+        'The code is open source. Feel free to check it out on [GitHub](https://github.com/Sirius-A/sv-restaurant-zug-bot).';
+    tgBot.sendMessage(chatId,markdownText,{ parse_mode: 'Markdown'});
 }
