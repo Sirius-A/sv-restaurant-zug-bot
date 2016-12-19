@@ -8,10 +8,10 @@ const Parser = require('./SVPageParser');
 const Subscriptions = require('./subscriptions');
 
 /* Daily cronjob to notify subscribers*/
-var job = new cron.CronJob('0 18 * * 1-5', function () {
+var job = new cron.CronJob('52 22 * * 1-5', function () {
     console.log('Cron job started');
     notifySubscribers();
-}, null, true);
+}, null, true,'Europe/Zurich');
 
 /* Routes */
 tgBot.onText(/\/get(Today)?$/mg,getTodayHandler);
@@ -19,6 +19,7 @@ tgBot.onText(/\/getDaily/,getDailyHandler);
 tgBot.onText(/\/start/,startHandler);
 tgBot.onText(/\/stop/,cancelSubscriptionsHandler);
 tgBot.onText(/\/cancel/,cancelSubscriptionsHandler);
+tgBot.onText(/\/notify/,notifySubscribers);
 
 /* Handlers */
 function sendTodaysMenu(chatId) {
@@ -26,6 +27,7 @@ function sendTodaysMenu(chatId) {
     const parser = new Parser();
 
     parser.parse(url, function (markdownText) {
+        markdownText += "Test message please ignore";
         tgBot.sendMessage(chatId, markdownText, {parse_mode: 'Markdown'});
     });
 }
@@ -68,12 +70,9 @@ function startHandler(message) {
 }
 
 function notifySubscribers() {
-    const subscriptions = new Subscriptions();
+    var subscriptions = new Subscriptions();
     console.log("notify Subscribers called");
-    subscriptions.getAll(function (subscribers) {
-        for(let subscriber of subscribers){
+    subscriptions.forAll(function (subscriber) {
             sendTodaysMenu(subscriber.id);
-        }
     });
-    
 }

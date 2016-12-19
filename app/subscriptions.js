@@ -46,24 +46,21 @@ class Subscriptions{
         callback();
     }
 
-    getAll(callback){
-        var subscriberCollection = co(function*() {
+    forAll(callback){
+        let subscriberCollection = co(function*() {
             //connect to db
             var db = yield MongoClient.connect(mongodb_uri);
             console.log("Connected correctly to server");
 
             // delete a single document
-            var subscriberCollection = yield db.collection('subscribers').find();
+            let subscriberCollection = yield db.collection('subscribers').find().forEach(callback);
 
             // Close connection
             db.close();
 
-            return subscriberCollection;
         }).catch(function(err) {
             console.log(err.stack);
-        }).then();
-
-        callback(subscriberCollection);
+        });
     }
 
 }
