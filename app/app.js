@@ -2,11 +2,16 @@
 const TelegramBot = require('node-telegram-bot-api');
 const bot_api_token = process.env.BOT_API_TOKEN;
 const tgBot  = new TelegramBot(bot_api_token, { polling: true });
-var CronJob = require('cron').CronJob;
+var cron = require('cron');
 
 const Parser = require('./SVPageParser');
 const Subscriptions = require('./subscriptions');
 
+/* Daily cronjob to notify subscribers*/
+var job = new cron.CronJob('00 00 09 * * 1-5', function () {
+    console.log('Cron job started');
+    notifySubscribers();
+}, null, true);
 
 /* Routes */
 tgBot.onText(/\/get(Today)?$/mg,getTodayHandler);
@@ -14,18 +19,6 @@ tgBot.onText(/\/getDaily/,getDailyHandler);
 tgBot.onText(/\/start/,startHandler);
 tgBot.onText(/\/stop/,cancelSubscriptionsHandler);
 tgBot.onText(/\/cancel/,cancelSubscriptionsHandler);
-
-try {
-    var job  = new CronJob('00 00 10 * * 1-5', function() {
-        console.log('You will see this message every second');
-        notifySubscribers();
-    }, null, true);
-
-    job.start();
-} catch(ex) {
-    console.log("cron pattern not valid");
-}
-
 
 /* Handlers */
 function sendTodaysMenu(chatId) {
@@ -76,6 +69,7 @@ function startHandler(message) {
 
 function notifySubscribers() {
     const subscriptions = new Subscriptions();
+    console.log("notify Subscribers called");
     subscriptions.getAll(function (subscribers) {
         for(let subscriber of subscribers){
             sendTodaysMenu(subscriber.id);
