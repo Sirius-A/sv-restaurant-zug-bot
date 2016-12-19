@@ -1,78 +1,100 @@
 'use strict';
-const Telegram = require('telegram-node-bot');
-const TelegramBaseController = Telegram.TelegramBaseController;
-const TextCommand = Telegram.TextCommand;
+const TelegramBot = require('node-telegram-bot-api');
 const bot_api_token = process.env.BOT_API_TOKEN;
-const tg = new Telegram.Telegram(bot_api_token);
-const request = require('request');
-const cheerio = require('cheerio');
+const tgBot  = new TelegramBot(bot_api_token, { polling: true });
+const CronJob = require('cron').CronJob;
 
-class MealsController extends TelegramBaseController {
-    parse(url, callback) {
-        const self = this;
-        request(url, function(err, resp, body){
-            console.log("request");
-            let $ = cheerio.load(body);
-            let message = self.formatMessage($);
-            callback(message);
-        });
-    }
+const Parser = require('./SVPageParser');
+const Subscriptions = require('./subscriptions');
 
-    formatMessage($) {
-        let offers = $('.offer');
-        var text = '';
-        $(offers).each(function (i, offer) {
-            text += '*' + $(offer).find('.offer-description').text().trim() + ': ';
-            text += $(offer).find('.menu-description .title').text() + '*\n';
-            text += $(offer).find('.menu-description .trimmings').text() + '\n';
-            text += '_' + $(offer).find('.price .price-item').text() + '_\n\n';
-        });
-
-        //get rid of special chars that mess with markdown formatting
-        text = text.replace(/`/g, '');
-
-        return text;
-    }
-
-    mealsHandler($) {
-        const self = this;
-        const url = 'http://siemens.sv-restaurant.ch/de/menuplan.html';
-
-        self.parse(url, function(text) {
-            $.sendMessage(text, { parse_mode: 'Markdown'});
-        });
-    }
-
-    get routes() {
-        return {
-            'getToday': 'mealsHandler'
-        };
-    }
+/* Daily cronjob to notify subscribers*/
+try {
+    new CronJob('00 10 * * 1-5', function () {
+        console.log('Cron job started');
+        notifySubscribers();
+    }, null, true,'Europe/Zurich');
+} catch(ex) {
+    console.log("cron pattern not valid");
 }
 
-class StartController extends TelegramBaseController {
-    /**
-     * @param {Scope} $
-     */
-    static start($) {
-        $.sendMessage('Hello! \n I can send you the menu for the SV restaurant in Zug. \n Try /get or /getDaily (for daily updates)');
-    }
+/* Routes */
+tgBot.onText(/\/get(Today)?$/mg,getTodayHandler);
+tgBot.onText(/\/getDaily/,getDailyHandler);
+tgBot.onText(/\/getPartTime/,getPartTimeHandler);
+tgBot.onText(/\/start/,startHandler);
+tgBot.onText(/\/stop/,cancelSubscriptionsHandler);
+tgBot.onText(/\/cancel/,cancelSubscriptionsHandler);
+tgBot.onText(/\/(get)?source/mg,getSourceHandler);
 
-    get routes() {
-        return {
-            'startHandler': 'start'
-        };
-    }
+/* Handlers */
+function sendTodaysMenu(chatId) {
+    const url = 'http://siemens.sv-restaurant.ch/de/menuplan.html';
+    const parser = new Parser();
+
+    parser.parse(url, function (markdownText) {
+        tgBot.sendMessage(chatId, markdownText, {parse_mode: 'Markdown'});
+    });
+}
+function getTodayHandler(message) {
+    let chatId = message.chat.id;
+    sendTodaysMenu(chatId);
 }
 
-tg.router
-    .when(
-        new TextCommand('get', 'getToday'),
-        new MealsController()
-    )
-    .when(
-        new TextCommand('/start', 'startHandler'),
-        new StartController()
-    );
+function getDailyHandler(message) {
+    let chat = message.chat;
+    let chatId = message.chat.id;
 
-module.exports.MealsController = MealsController;
+    const subscriptions = new Subscriptions();
+    subscriptions.add(chat,function () {
+        let markdownText = "*Successfully added you to the daily subscriber list* \n" +
+            "I will send you the menu at 10:00am from now on. \n" +
+            "You can send me /stop to quit that.";
+        tgBot.sendMessage(chatId,markdownText,{ parse_mode: 'Markdown'});
+    });
+}
+
+function getPartTimeHandler(message) {
+    let chatId = message.chat.id;
+
+    let markdownText = "This feature is not implemented yet.";
+    tgBot.sendMessage(chatId,markdownText,{ parse_mode: 'Markdown'});
+
+}
+
+function cancelSubscriptionsHandler(message) {
+    let chat = message.chat;
+    let chatId = message.chat.id;
+
+    const subscriptions = new Subscriptions();
+    subscriptions.remove(chat,function () {
+        let markdownText = "*Successfully removed you from the daily subscriber list* \n" +
+            "I will no longer bother you with daily updates.";
+        tgBot.sendMessage(chatId,markdownText,{ parse_mode: 'Markdown'});
+    });
+}
+
+function startHandler(message) {
+    let chatId = message.chat.id;
+
+    var markdownText = 'Hello! \n' +
+        'I can send you the menu for the SV restaurant in Zug. \n' +
+        'try /get or /getDaily (for daily updates)';
+    tgBot.sendMessage(chatId,markdownText,{ parse_mode: 'Markdown'});
+}
+
+function notifySubscribers() {
+    var subscriptions = new Subscriptions();
+
+    console.log("notify Subscribers called");
+    subscriptions.forAll(function (subscriber) {
+            sendTodaysMenu(subscriber.id);
+    });
+}
+
+function getSourceHandler(message){
+    let chatId = message.chat.id;
+
+    let markdownText = 'This bot is written by Fabio Zuber utilizing Node.js.\n' +
+        'The code is open source. Feel free to check it out on [GitHub](https://github.com/Sirius-A/sv-restaurant-zug-bot).';
+    tgBot.sendMessage(chatId,markdownText,{ parse_mode: 'Markdown'});
+}
