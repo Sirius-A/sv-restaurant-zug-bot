@@ -2,16 +2,20 @@
 const TelegramBot = require('node-telegram-bot-api');
 const bot_api_token = process.env.BOT_API_TOKEN;
 const tgBot  = new TelegramBot(bot_api_token, { polling: true });
-var cron = require('cron');
+const CronJob = require('cron').CronJob;
 
 const Parser = require('./SVPageParser');
 const Subscriptions = require('./subscriptions');
 
 /* Daily cronjob to notify subscribers*/
-var job = new cron.CronJob('00 10 * * 1-5', function () {
-    console.log('Cron job started');
-    notifySubscribers();
-}, null, true,'Europe/Zurich');
+try {
+    new CronJob('00 10 * * 1-5', function () {
+        console.log('Cron job started');
+        notifySubscribers();
+    }, null, true,'Europe/Zurich');
+} catch(ex) {
+    console.log("cron pattern not valid");
+}
 
 /* Routes */
 tgBot.onText(/\/get(Today)?$/mg,getTodayHandler);
@@ -43,7 +47,8 @@ function getDailyHandler(message) {
     const subscriptions = new Subscriptions();
     subscriptions.add(chat,function () {
         let markdownText = "*Successfully added you to the daily subscriber list* \n" +
-            "I will send you the menu at 10:00am from now on. You can send me /stop to cancel the daily update.";
+            "I will send you the menu at 10:00am from now on. \n" +
+            "You can send me /stop to quit that.";
         tgBot.sendMessage(chatId,markdownText,{ parse_mode: 'Markdown'});
     });
 }
