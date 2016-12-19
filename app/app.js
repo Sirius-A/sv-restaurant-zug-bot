@@ -18,13 +18,13 @@ try {
 }
 
 /* Routes */
-tgBot.onText(/\/get(Today)?$/mg,getTodayHandler);
-tgBot.onText(/\/getDaily/,getDailyHandler);
-tgBot.onText(/\/getPartTime/,getPartTimeHandler);
-tgBot.onText(/\/start/,startHandler);
-tgBot.onText(/\/stop/,cancelSubscriptionsHandler);
-tgBot.onText(/\/cancel/,cancelSubscriptionsHandler);
-tgBot.onText(/\/(get)?source/mg,getSourceHandler);
+tgBot.onText(/\/get(Today)?$/mgi,getTodayHandler);
+tgBot.onText(/\/getDaily/i,getDailyHandler);
+tgBot.onText(/\/getPartTime/i,getPartTimeHandler);
+tgBot.onText(/\/start/i,startHandler);
+tgBot.onText(/\/stop/i,cancelSubscriptionsHandler);
+tgBot.onText(/\/cancel/i,cancelSubscriptionsHandler);
+tgBot.onText(/\/(get)?source/mgi,getSourceHandler);
 
 /* Handlers */
 function sendTodaysMenu(chatId) {
