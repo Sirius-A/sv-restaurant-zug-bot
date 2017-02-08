@@ -19,8 +19,8 @@ try {
 
 /* Routes */
 tgBot.onText(/\/get(Today)?$/mgi,getTodayHandler);
-tgBot.onText(/\/getDaily/i,getDailyHandler);
-tgBot.onText(/\/getPartTime/i,getPartTimeHandler);
+tgBot.onText(/\/(get)?Daily/i,getDailyHandler);
+tgBot.onText(/\/(get)?PartTime/i,getPartTimeHandler);
 tgBot.onText(/\/start/i,startHandler);
 tgBot.onText(/\/stop/i,cancelSubscriptionsHandler);
 tgBot.onText(/\/cancel/i,cancelSubscriptionsHandler);
@@ -78,7 +78,7 @@ function startHandler(message) {
 
     let markdownText = 'Hello! \n' +
         'I can send you the menu for the SV restaurant in Zug. \n' +
-        'try /get or /getDaily (for daily updates)';
+        'try /get or /Daily (for daily updates)';
 
     let options = {
         "parse_mode": "Markdown",
