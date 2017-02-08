@@ -56,7 +56,7 @@ function getDailyHandler(message) {
 function getPartTimeHandler(message) {
     let chatId = message.chat.id;
 
-    let markdownText = "This feature is not implemented yet.";
+    let markdownText = "Which weekdays do you want me to send you the menu?";
     tgBot.sendMessage(chatId,markdownText,{ parse_mode: 'Markdown'});
 
 }
@@ -76,14 +76,30 @@ function cancelSubscriptionsHandler(message) {
 function startHandler(message) {
     let chatId = message.chat.id;
 
-    var markdownText = 'Hello! \n' +
+    let markdownText = 'Hello! \n' +
         'I can send you the menu for the SV restaurant in Zug. \n' +
         'try /get or /getDaily (for daily updates)';
-    tgBot.sendMessage(chatId,markdownText,{ parse_mode: 'Markdown'});
+
+    let options = {
+        "parse_mode": "Markdown",
+        "reply_markup": {
+            "ReplyKeyboardMarkup": {
+                "keyboard": [
+                    ['Monday'],
+                    ['Tuesday'],
+                    ['Wednesday'],
+                    ['Thursday'],
+                    ['Friday']
+                ]
+            }
+        }
+    };
+
+    tgBot.sendMessage(chatId,markdownText, options);
 }
 
 function notifySubscribers() {
-    var subscriptions = new Subscriptions();
+    let subscriptions = new Subscriptions();
 
     console.log("notify Subscribers called");
     subscriptions.forAll(function (subscriber) {
