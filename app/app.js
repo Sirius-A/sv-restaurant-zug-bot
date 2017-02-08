@@ -57,7 +57,23 @@ function getPartTimeHandler(message) {
     let chatId = message.chat.id;
 
     let markdownText = "Which weekdays do you want me to send you the menu?";
-    tgBot.sendMessage(chatId,markdownText,{ parse_mode: 'Markdown'});
+
+    let options = {
+        "parse_mode": "Markdown",
+        "reply_markup": {
+            "ReplyKeyboardMarkup": {
+                "keyboard": [
+                    ['Monday'],
+                    ['Tuesday'],
+                    ['Wednesday'],
+                    ['Thursday'],
+                    ['Friday']
+                ]
+            }
+        }
+    };
+
+    tgBot.sendMessage(chatId,markdownText,options);
 
 }
 
@@ -80,22 +96,7 @@ function startHandler(message) {
         'I can send you the menu for the SV restaurant in Zug. \n' +
         'try /get or /Daily (for daily updates)';
 
-    let options = {
-        "parse_mode": "Markdown",
-        "reply_markup": {
-            "ReplyKeyboardMarkup": {
-                "keyboard": [
-                    ['Monday'],
-                    ['Tuesday'],
-                    ['Wednesday'],
-                    ['Thursday'],
-                    ['Friday']
-                ]
-            }
-        }
-    };
-
-    tgBot.sendMessage(chatId,markdownText, options);
+        tgBot.sendMessage(chatId,markdownText, options);
 }
 
 function notifySubscribers() {
