@@ -7,6 +7,8 @@ const CronJob = require('cron').CronJob;
 const Parser = require('./SVPageParser');
 const Subscriptions = require('./subscriptions');
 
+const weekdayRegex = /Monday|Tuesday|Wednesday|Thursday|Friday/i;
+
 /* Daily cronjob to notify subscribers*/
 try {
     new CronJob('00 10 * * 1-5', function () {
@@ -25,6 +27,7 @@ tgBot.onText(/\/start/i,startHandler);
 tgBot.onText(/\/stop/i,cancelSubscriptionsHandler);
 tgBot.onText(/\/cancel/i,cancelSubscriptionsHandler);
 tgBot.onText(/\/(get)?source/mgi,getSourceHandler);
+tgBot.onText(weekdayRegex,weekdayHandler);
 
 /* Handlers */
 function sendTodaysMenu(chatId) {
@@ -72,9 +75,12 @@ function getPartTimeHandler(message) {
         "selective": true
         }
     };
-
     tgBot.sendMessage(chatId, markdownText, options);
+}
 
+function weekdayHandler() {
+
+    
 }
 
 function cancelSubscriptionsHandler(message) {
