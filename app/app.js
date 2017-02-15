@@ -90,7 +90,11 @@ function cancelWeekdaySelectionHandler(message) {
 
     let markdownText = "Alright. Here are the days I will send you the menu";
     let options = {
-        "parse_mode": "Markdown"
+        "parse_mode": "Markdown",
+        "reply_markup": {
+            "remove_keyboard": true,
+            "selective": true
+        }
     };
     tgBot.sendMessage(chatId, markdownText, options);
 }
