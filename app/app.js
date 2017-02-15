@@ -7,7 +7,8 @@ const CronJob = require('cron').CronJob;
 const Parser = require('./SVPageParser');
 const Subscriptions = require('./subscriptions');
 
-const weekdayRegex = /(Monday)|(Tuesday)|(Wednesday)|(Thursday)|(Friday)/i;
+const weekdays = ["Monday", "Tuesday", "Wednesday","Thursday","Friday"];
+const weekdayRegex = new RegExp(weekdays.join("|"), 'i');
 
 /* Daily cronjob to notify subscribers*/
 try {
@@ -61,19 +62,13 @@ function getPartTimeHandler(message) {
     let chatId = message.chat.id;
 
     let markdownText = "Please select all weekdays you want to be notified.";
+    let weekdayJSON = JSON.parse(JSON.stringify(weekdays));
 
     let options = {
         "parse_mode": "Markdown",
         "reply_markup": {
-                "keyboard": [
-                    [{text: "Monday"}],
-                    [{text: "Tuesday"}],
-                    [{text: "Wednesday"}],
-                    [{text: "Thursday"}],
-                    [{text: "Friday"}],
-                    [{text: "Done! Send me the menu on these days."}]
-                ],
-        "selective": true
+            "keyboard": [weekdayJSON],
+            "selective": true,
         }
     };
     tgBot.sendMessage(chatId, markdownText, options);
@@ -82,6 +77,8 @@ function getPartTimeHandler(message) {
 function weekdayHandler(message,match) {
     let chatId = message.chat.id;
     let markdownText = "Okey I will send you updates each " + match[0];
+
+
     tgBot.sendMessage(chatId, markdownText, {parse_mode: 'Markdown'});
 }
 
