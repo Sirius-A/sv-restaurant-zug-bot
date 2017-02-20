@@ -7,8 +7,8 @@ const CronJob = require('cron').CronJob;
 const Parser = require('./SVPageParser');
 const Subscriptions = require('./subscriptions');
 
-const weekdays = ["Monday", "Tuesday", "Wednesday","Thursday","Friday"];
-const weekdayRegex = new RegExp(weekdays.join("|"), 'i');
+const weekdays = ["(Mon(day)?)","(Tue(sday)?)","(Wed(nesday)?)","Thu(rsday)?","Fri(day)?"];
+const weekdayRegex = new RegExp(weekdays.join("|"),'i');
 
 /* Daily cronjob to notify subscribers*/
 try {
@@ -59,15 +59,18 @@ function getDailyHandler(message) {
 }
 
 function getPartTimeHandler(message) {
+    const weekdaysKeyboard = [
+        [{text: "Monday"},{text: "Tuesday"},],
+        [{text: "Wednesday"},{text: "Thursday"}],
+        [{text: "Friday"}],[{text: "Done!"}]
+    ];
     let chatId = message.chat.id;
-
     let markdownText = "Please select all weekdays you want to be notified.";
-    let weekdayJSON = JSON.parse(JSON.stringify(weekdays));
 
     let options = {
         "parse_mode": "Markdown",
         "reply_markup": {
-            "keyboard": [weekdayJSON],
+            "keyboard": weekdaysKeyboard,
             "selective": true,
         }
     };
@@ -76,10 +79,13 @@ function getPartTimeHandler(message) {
 
 function weekdayHandler(message,match) {
     let chatId = message.chat.id;
-    let markdownText = "Okey I will send you updates each " + match[0];
-
+    let markdownText = "Okey I will send you updates each " + match[0] ;
+    let weekdayIndex = + weekdays.regexIndexOf(match[0]) + 1; //+1 since dates/days start with 1.
 
     tgBot.sendMessage(chatId, markdownText, {parse_mode: 'Markdown'});
+
+    weekdays.regexIndexOf(match[0]);
+
 }
 
 function cancelWeekdaySelectionHandler(message) {
@@ -132,4 +138,24 @@ function getSourceHandler(message){
     let markdownText = 'This bot is written by Fabio Zuber utilizing Node.js.\n' +
         'The code is open source. Feel free to check it out on [GitHub](https://github.com/Sirius-A/sv-restaurant-zug-bot).';
     tgBot.sendMessage(chatId,markdownText,{ parse_mode: 'Markdown'});
+}
+
+/**
+ * Regular Expresion IndexOf for Arrays
+ * This little addition to the Array prototype will iterate over array
+ * and return the index of the first element which matches the provided
+ * regular expresion.
+ * Note: This will not match on objects.
+ * @param  {RegEx}   rx The regular expression to test with. E.g. /-ba/gim
+ * @return {Numeric} -1 means not found
+ */
+if (typeof Array.prototype.regexIndexOf === 'undefined') {
+    Array.prototype.regexIndexOf = function (rx) {
+        for (var i in this) {
+            if (rx.match(this[i].toString())) {
+                return i;
+            }
+        }
+        return -1;
+    };
 }
