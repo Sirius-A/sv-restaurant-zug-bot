@@ -6,6 +6,7 @@ const CronJob = require('cron').CronJob;
 
 const Parser = require('./SVPageParser');
 const Subscriptions = require('./subscriptions');
+const subscriptions = new Subscriptions();
 
 const weekdays = ["(Mon(day)?)","(Tue(sday)?)","(Wed(nesday)?)","Thu(rsday)?","Fri(day)?"];
 const weekdayRegex = new RegExp(weekdays.join("|"),'i');
@@ -49,7 +50,6 @@ function getDailyHandler(message) {
     let chat = message.chat;
     let chatId = message.chat.id;
 
-    const subscriptions = new Subscriptions();
     subscriptions.add(chat,function () {
         let markdownText = "*Successfully added you to the daily subscriber list* \n" +
             "I will send you the menu at 10:00am from now on. \n" +
@@ -78,13 +78,15 @@ function getPartTimeHandler(message) {
 }
 
 function weekdayHandler(message,match) {
+    let chat = message.chat;
     let chatId = message.chat.id;
     let markdownText = "Okey I will send you updates each " + match[0] ;
     let weekdayIndex = + weekdays.regexIndexOf(match[0]) + 1; //+1 since dates/days start with 1.
 
-    tgBot.sendMessage(chatId, markdownText, {parse_mode: 'Markdown'});
-
-    weekdays.regexIndexOf(match[0]);
+    subscriptions.addWeekday(chat,weekdayIndex,function () {
+        tgBot.sendMessage(chatId, markdownText, {parse_mode: 'Markdown'});
+        weekdays.regexIndexOf(match[0]);
+    });
 
 }
 
@@ -105,7 +107,6 @@ function cancelSubscriptionsHandler(message) {
     let chat = message.chat;
     let chatId = message.chat.id;
 
-    const subscriptions = new Subscriptions();
     subscriptions.remove(chat,function () {
         let markdownText = "*Successfully removed you from the daily subscriber list* \n" +
             "I will no longer bother you with daily updates.";
@@ -124,7 +125,6 @@ function startHandler(message) {
 }
 
 function notifySubscribers() {
-    let subscriptions = new Subscriptions();
 
     console.log("notify Subscribers called");
     subscriptions.forAll(function (subscriber) {

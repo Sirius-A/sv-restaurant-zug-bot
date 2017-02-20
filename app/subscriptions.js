@@ -27,6 +27,29 @@ class Subscriptions{
         callback();
     }
 
+    addWeekday(chat, weekday, callback){
+        co(function*() {
+            //connect to db
+            var db = yield MongoClient.connect(mongodb_uri);
+            console.log("Connected correctly to server");
+
+            // Insert/update a single document
+            yield db.collection('subscribers').updateOne(
+                {id:chat.id},
+                {$addToSet: {weekdays: weekday}},
+                {upsert: true}
+            );
+
+            // Close connection
+            db.close();
+        }).catch(function(err) {
+            console.log(err.stack);
+        });
+
+        callback();
+    }
+
+
     remove(chat, callback){
         co(function*() {
             //connect to db
