@@ -81,7 +81,7 @@ function weekdayHandler(message,match) {
     let chat = message.chat;
     let chatId = message.chat.id;
     let markdownText = "Okey I will send you updates each " + match[0] ;
-    let weekdayIndex = + weekdays.regexIndexOf(match[0]) + 1; //+1 since dates/days start with 1.
+    let weekdayIndex = + weekdays.regexIndexOf(match[0]) + 1; //+1 since dates/days start on Sunday .
 
     subscriptions.addWeekday(chat,weekdayIndex,function () {
         tgBot.sendMessage(chatId, markdownText, {parse_mode: 'Markdown'});
@@ -91,17 +91,26 @@ function weekdayHandler(message,match) {
 }
 
 function cancelWeekdaySelectionHandler(message) {
+    let chat = message.chat;
     let chatId = message.chat.id;
 
-    let markdownText = "Alright. Here are the days I will send you the menu";
-    let options = {
-        "parse_mode": "Markdown",
-        "reply_markup": {
-            "remove_keyboard": true,
-            "selective": true
-        }
-    };
-    tgBot.sendMessage(chatId, markdownText, options);
+    subscriptions.getWeekdays(chat,function (err,weekdaysData) {
+        let markdownText = "Alright. Here are the days I will send you the menu:";
+         for(let weekday of weekdaysData.weekdays){
+             let weekdayName = weekdays[weekday-1].replace(/\(|\)|\?/gi,"");
+             markdownText += `\n- ${weekdayName}`;
+
+         }
+        let options = {
+            "parse_mode": "Markdown",
+            "reply_markup": {
+                "remove_keyboard": true,
+                "selective": true
+            }
+        };
+        tgBot.sendMessage(chatId, markdownText, options);
+    });
+
 }
 function cancelSubscriptionsHandler(message) {
     let chat = message.chat;
@@ -157,5 +166,14 @@ if (typeof Array.prototype.regexIndexOf === 'undefined') {
             }
         }
         return -1;
+    };
+}
+
+if (typeof Date.prototype.getDayName === 'undefined') {
+    var days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+    Date.prototype.getDayName = function (dayIndex) {
+        Date.prototype.getDayName = function() {
+            return days[dayIndex];
+        };
     };
 }

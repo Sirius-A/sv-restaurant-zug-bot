@@ -68,14 +68,33 @@ class Subscriptions{
         callback();
     }
 
-    forAll(callback){
+    getWeekdays(chat,callback){
+        let weekdays;
+        co(function*() {
+                //connect to db
+                var db = yield MongoClient.connect(mongodb_uri);
+                console.log("Connected correctly to server");
+
+                // Insert/update a single document
+                db.collection('subscribers').findOne({id:chat.id}, {weekdays:1},callback);
+
+                // Close connection
+                db.close();
+        }).catch(function(err) {
+            console.log(err.stack);
+        });
+        callback(weekdays);
+
+    }
+
+    forAll(next){
         co(function*() {
             //connect to db
             var db = yield MongoClient.connect(mongodb_uri);
             console.log("Connected correctly to server");
 
             // delete a single document
-            yield db.collection('subscribers').find().forEach(callback);
+            yield db.collection('subscribers').find().forEach(next);
 
             // Close connection
             db.close();
