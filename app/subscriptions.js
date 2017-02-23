@@ -49,7 +49,6 @@ class Subscriptions{
         callback();
     }
 
-
     remove(chat, callback){
         co(function*() {
             //connect to db
@@ -87,14 +86,14 @@ class Subscriptions{
 
     }
 
-    forAll(next){
+    forAllDailly(next){
         co(function*() {
             //connect to db
             var db = yield MongoClient.connect(mongodb_uri);
             console.log("Connected correctly to server");
 
-            // delete a single document
-            yield db.collection('subscribers').find().forEach(next);
+            //find all daily subs
+            yield db.collection('subscribers').find({weekdays:{$exists: false}}).forEach(next);
 
             // Close connection
             db.close();
@@ -102,7 +101,21 @@ class Subscriptions{
             console.log(err.stack);
         });
     }
+    forAllParttime(weekdayIndex,next){
+        co(function*() {
+            //connect to db
+            var db = yield MongoClient.connect(mongodb_uri);
+            console.log("Connected correctly to server");
 
+            // find all documents containing a given weekday
+            yield db.collection('subscribers').find({weekdays:{weekdayIndex}}).forEach(next);
+
+            // Close connection
+            db.close();
+        }).catch(function(err) {
+            console.log(err.stack);
+        });
+    }
 }
 
 module.exports = Subscriptions;

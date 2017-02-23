@@ -99,7 +99,6 @@ function cancelWeekdaySelectionHandler(message) {
          for(let weekday of weekdaysData.weekdays){
              let weekdayName = weekdays[weekday-1].replace(/\(|\)|\?/gi,"");
              markdownText += `\n- ${weekdayName}`;
-
          }
         let options = {
             "parse_mode": "Markdown",
@@ -135,11 +134,16 @@ function startHandler(message) {
 
 function notifySubscribers() {
 
-    console.log("notify Subscribers called");
-    subscriptions.forAll(function (subscriber) {
-            sendTodaysMenu(subscriber.id);
+    console.log("notify Subscribers");
+    subscriptions.forAllDailly(function (subscriber) {
+        sendTodaysMenu(subscriber.id);
     });
-}
+
+    let now = new Date();
+    subscriptions.forAllParttime(now.getDay(),function (subscriber) {
+        sendTodaysMenu(subscriber.id);
+    })
+;}
 
 function getSourceHandler(message){
     let chatId = message.chat.id;
