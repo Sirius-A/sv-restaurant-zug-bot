@@ -68,21 +68,19 @@ class Subscriptions{
     }
 
     getWeekdays(chat,callback){
-        let weekdays;
         co(function*() {
-                //connect to db
-                var db = yield MongoClient.connect(mongodb_uri);
-                console.log("Connected correctly to server");
+            //connect to db
+            var db = yield MongoClient.connect(mongodb_uri);
+            console.log("Connected correctly to server");
 
-                // Insert/update a single document
-                db.collection('subscribers').findOne({id:chat.id}, {weekdays:1},callback);
+            // Insert/update a single document
+            db.collection('subscribers').findOne({id:chat.id}, {weekdays:1},callback);
 
-                // Close connection
-                db.close();
+            // Close connection
+            db.close();
         }).catch(function(err) {
             console.log(err.stack);
         });
-        callback(weekdays);
 
     }
 
@@ -93,7 +91,7 @@ class Subscriptions{
             console.log("Connected correctly to server");
 
             //find all daily subs
-            yield db.collection('subscribers').find({weekdays:{$exists: false}}).forEach(next);
+            db.collection('subscribers').find({weekdays:{$exists: false}}).forEach(next);
 
             // Close connection
             db.close();
@@ -108,7 +106,7 @@ class Subscriptions{
             console.log("Connected correctly to server");
 
             // find all documents containing a given weekday
-            yield db.collection('subscribers').find({weekdays:{weekdayIndex}}).forEach(next);
+            db.collection('subscribers').find({weekdays: weekdayIndex}).forEach(next);
 
             // Close connection
             db.close();

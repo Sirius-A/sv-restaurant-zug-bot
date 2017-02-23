@@ -31,6 +31,7 @@ tgBot.onText(/\/cancel/i,cancelSubscriptionsHandler);
 tgBot.onText(/\/(get)?source/mgi,getSourceHandler);
 tgBot.onText(weekdayRegex,weekdayHandler);
 tgBot.onText(/Done.*/i,cancelWeekdaySelectionHandler);
+// tgBot.onText(/notify/gi,notifySubscribers); //to test subscriber notifications
 
 /* Handlers */
 function sendTodaysMenu(chatId) {
@@ -95,13 +96,24 @@ function cancelWeekdaySelectionHandler(message) {
     let chatId = message.chat.id;
 
     subscriptions.getWeekdays(chat,function (err,weekdaysData) {
-        let markdownText = "Alright. Here are the days I will send you the menu:";
-         for(let weekday of weekdaysData.weekdays){
-             let weekdayName = weekdays[weekday-1].replace(/\(|\)|\?/gi,"");
-             markdownText += `\n- ${weekdayName}`;
-         }
+        let markdownText = "";
+        if(err){
+            console.log("error getting weekdays from mongodb");
+            return;
+        }
+
+        if(weekdaysData === null){
+            markdownText = "You did not select any Weekdays ¯\\_(ツ)_/¯ \nI will not send you updates";
+        }else {
+            markdownText = "Alright. Here are the days I will send you the menu:";
+            for (let weekday of weekdaysData.weekdays) {
+                let weekdayName = weekdays[weekday - 1].replace(/\(|\)|\?/gi, "");
+                markdownText += `\n- ${weekdayName}`;
+            }
+        }
+
         let options = {
-            "parse_mode": "Markdown",
+            "parse_mode": "HTML",
             "reply_markup": {
                 "remove_keyboard": true,
                 "selective": true
@@ -109,7 +121,6 @@ function cancelWeekdaySelectionHandler(message) {
         };
         tgBot.sendMessage(chatId, markdownText, options);
     });
-
 }
 function cancelSubscriptionsHandler(message) {
     let chat = message.chat;
@@ -163,21 +174,12 @@ function getSourceHandler(message){
  * @return {Numeric} -1 means not found
  */
 if (typeof Array.prototype.regexIndexOf === 'undefined') {
-    Array.prototype.regexIndexOf = function (rx) {
+    Array.prototype.regexIndexOf = function (RegEx) {
         for (var i in this) {
-            if (rx.match(this[i].toString())) {
+            if (RegEx.match(this[i].toString())) {
                 return i;
             }
         }
         return -1;
-    };
-}
-
-if (typeof Date.prototype.getDayName === 'undefined') {
-    var days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-    Date.prototype.getDayName = function (dayIndex) {
-        Date.prototype.getDayName = function() {
-            return days[dayIndex];
-        };
     };
 }
