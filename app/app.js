@@ -6,6 +6,10 @@ const CronJob = require('cron').CronJob;
 
 const Parser = require('./SVPageParser');
 const Subscriptions = require('./subscriptions');
+const subscriptions = new Subscriptions();
+
+const weekdays = ["(Mon(day)?)","(Tue(sday)?)","(Wed(nesday)?)","Thu(rsday)?","Fri(day)?"];
+const weekdayRegex = new RegExp(weekdays.join("|"),'i');
 
 /* Daily cronjob to notify subscribers*/
 try {
@@ -25,6 +29,9 @@ tgBot.onText(/\/start/i,startHandler);
 tgBot.onText(/\/stop/i,cancelSubscriptionsHandler);
 tgBot.onText(/\/cancel/i,cancelSubscriptionsHandler);
 tgBot.onText(/\/(get)?source/mgi,getSourceHandler);
+tgBot.onText(weekdayRegex,weekdayHandler);
+tgBot.onText(/Done.*/i,cancelWeekdaySelectionHandler);
+// tgBot.onText(/notify/gi,notifySubscribers); //to test subscriber notifications
 
 /* Handlers */
 function sendTodaysMenu(chatId) {
@@ -44,7 +51,6 @@ function getDailyHandler(message) {
     let chat = message.chat;
     let chatId = message.chat.id;
 
-    const subscriptions = new Subscriptions();
     subscriptions.add(chat,function () {
         let markdownText = "*Successfully added you to the daily subscriber list* \n" +
             "I will send you the menu at 10:00am from now on. \n" +
@@ -54,18 +60,72 @@ function getDailyHandler(message) {
 }
 
 function getPartTimeHandler(message) {
+    const weekdaysKeyboard = [
+        [{text: "Monday"},{text: "Tuesday"},],
+        [{text: "Wednesday"},{text: "Thursday"}],
+        [{text: "Friday"}],[{text: "Done!"}]
+    ];
     let chatId = message.chat.id;
+    let markdownText = "Please select all weekdays you want to be notified.";
 
-    let markdownText = "This feature is not implemented yet.";
-    tgBot.sendMessage(chatId,markdownText,{ parse_mode: 'Markdown'});
+    let options = {
+        "parse_mode": "Markdown",
+        "reply_markup": {
+            "keyboard": weekdaysKeyboard,
+            "selective": true,
+        }
+    };
+    tgBot.sendMessage(chatId, markdownText, options);
+}
+
+function weekdayHandler(message,match) {
+    let chat = message.chat;
+    let chatId = message.chat.id;
+    let markdownText = "Okey I will send you updates each " + match[0] ;
+    let weekdayIndex = + weekdays.regexIndexOf(match[0]) + 1; //+1 since dates/days start on Sunday .
+
+    subscriptions.addWeekday(chat,weekdayIndex,function () {
+        tgBot.sendMessage(chatId, markdownText, {parse_mode: 'Markdown'});
+        weekdays.regexIndexOf(match[0]);
+    });
 
 }
 
+function cancelWeekdaySelectionHandler(message) {
+    let chat = message.chat;
+    let chatId = message.chat.id;
+
+    subscriptions.getWeekdays(chat,function (err,weekdaysData) {
+        let markdownText = "";
+        if(err){
+            console.log("error getting weekdays from mongodb");
+            return;
+        }
+
+        if(weekdaysData === null){
+            markdownText = "You did not select any Weekdays ¯\\_(ツ)_/¯ \nI will not send you updates";
+        }else {
+            markdownText = "Alright. Here are the days I will send you the menu:";
+            for (let weekday of weekdaysData.weekdays) {
+                let weekdayName = weekdays[weekday - 1].replace(/\(|\)|\?/gi, "");
+                markdownText += `\n- ${weekdayName}`;
+            }
+        }
+
+        let options = {
+            "parse_mode": "HTML",
+            "reply_markup": {
+                "remove_keyboard": true,
+                "selective": true
+            }
+        };
+        tgBot.sendMessage(chatId, markdownText, options);
+    });
+}
 function cancelSubscriptionsHandler(message) {
     let chat = message.chat;
     let chatId = message.chat.id;
 
-    const subscriptions = new Subscriptions();
     subscriptions.remove(chat,function () {
         let markdownText = "*Successfully removed you from the daily subscriber list* \n" +
             "I will no longer bother you with daily updates.";
@@ -76,20 +136,25 @@ function cancelSubscriptionsHandler(message) {
 function startHandler(message) {
     let chatId = message.chat.id;
 
-    var markdownText = 'Hello! \n' +
+    let markdownText = 'Hello! \n' +
         'I can send you the menu for the SV restaurant in Zug. \n' +
-        'try /get or /daily (for daily updates)';
-    tgBot.sendMessage(chatId,markdownText,{ parse_mode: 'Markdown'});
+        'try /get or /Daily (for daily updates)';
+
+        tgBot.sendMessage(chatId,markdownText, { parse_mode: 'Markdown'});
 }
 
 function notifySubscribers() {
-    var subscriptions = new Subscriptions();
 
-    console.log("notify Subscribers called");
-    subscriptions.forAll(function (subscriber) {
-            sendTodaysMenu(subscriber.id);
+    console.log("notify Subscribers");
+    subscriptions.forAllDailly(function (subscriber) {
+        sendTodaysMenu(subscriber.id);
     });
-}
+
+    let now = new Date();
+    subscriptions.forAllParttime(now.getDay(),function (subscriber) {
+        sendTodaysMenu(subscriber.id);
+    })
+;}
 
 function getSourceHandler(message){
     let chatId = message.chat.id;
@@ -97,4 +162,24 @@ function getSourceHandler(message){
     let markdownText = 'This bot is written by Fabio Zuber utilizing Node.js.\n' +
         'The code is open source. Feel free to check it out on [GitHub](https://github.com/Sirius-A/sv-restaurant-zug-bot).';
     tgBot.sendMessage(chatId,markdownText,{ parse_mode: 'Markdown'});
+}
+
+/**
+ * Regular Expresion IndexOf for Arrays
+ * This little addition to the Array prototype will iterate over array
+ * and return the index of the first element which matches the provided
+ * regular expresion.
+ * Note: This will not match on objects.
+ * @param  {RegEx}   rx The regular expression to test with. E.g. /-ba/gim
+ * @return {Numeric} -1 means not found
+ */
+if (typeof Array.prototype.regexIndexOf === 'undefined') {
+    Array.prototype.regexIndexOf = function (RegEx) {
+        for (var i in this) {
+            if (RegEx.match(this[i].toString())) {
+                return i;
+            }
+        }
+        return -1;
+    };
 }
