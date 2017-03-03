@@ -28,7 +28,7 @@
     "co": "^4.6.0",
     "cron": "^1.2.1",
     "mongodb": "^2.2.16",
-    "node-telegram-bot-api": "^0.24.0",
+    "node-telegram-bot-api": "^0.27.0",
     "request": "^2.75.0"
   },
   "devDependencies": {
