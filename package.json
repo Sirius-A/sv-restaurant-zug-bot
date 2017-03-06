@@ -11,6 +11,7 @@
     "start-debug": "node --debug-brk app/app.js",
     "lint": "jshint --reporter=node_modules/jshint-stylish app",
     "test": "mocha test/",
+    "test-debug": "mocha test/ --debug-brk",
     "pretest": "npm run lint"
   },
   "repository": {
