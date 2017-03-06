@@ -14,12 +14,19 @@ class SVPageParser{
 
     formatMessage($) {
         let offers = $('.offer');
-        var text = '';
+        let text = '';
         $(offers).each(function (i, offer) {
             text += '*' + removeSpecialCharacters($(offer).find('.offer-description').text().trim()) + ': ';
             text += removeSpecialCharacters($(offer).find('.menu-description .title').text()) + "*\n";
             text += removeSpecialCharacters($(offer).find('.menu-description .trimmings').text())  + "\n";
-            text += '_' + removeSpecialCharacters($(offer).find('.price .price-item').text())  + "_\n\n";
+            text += '_' + removeSpecialCharacters($(offer).find('.price .price-item').text())  + "_\n";
+            let provenance = removeSpecialCharacters($(offer).find('.provenance').text());
+            if(provenance !== ""){
+                text += '_' + provenance + "_\n\n";
+            }else{
+                text += "\n";
+            }
+
         });
 
         function removeSpecialCharacters(text){
