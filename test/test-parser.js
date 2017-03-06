@@ -12,6 +12,7 @@ describe('The sv page formatting module', function(){
             "Ofen Kartoffeln\n" +
             "Grillgemüse\n" +
             "_CHF 18.90_\n" +
+            "_Herkunft Fleisch: Ente / Ungarn_\n" +
             "\n" +
             "*dailys: Gemüseauflauf*\n" +
             "mit Basilikumsauce\n" +
@@ -23,12 +24,14 @@ describe('The sv page formatting module', function(){
             "Gemüseebly, Bouillongemüse, \n" +
             "sautiertes Kürbisgemüse\n" +
             "_100G 3.30_\n" +
+            "_Herkunft Fleisch: Lamm/ Neuseeland_\n" +
             "\n" +
             "*season market: Wrap mit Rindsstreifen*\n" +
             "Cocktailsauce, Rucola, \n" +
             "Tomaten, Eisbergsalat\n" +
             "an bunten Blattsalaten\n" +
             "_CHF 17.50_\n" +
+            "_Herkunft Fleisch: Rind / Schweiz_\n" +
             "\n" +
             "*go4 pasta: Agnolotti Fondue*\n" +
             "Sauce Quattro Formaggi\n" +
@@ -38,7 +41,6 @@ describe('The sv page formatting module', function(){
 
         let menuplanPath = __dirname + "/menuplan2016-02-14.html";
         let svPageParser = new SVPageParser();
-
 
         let $ = cheerio.load(fs.readFileSync(menuplanPath));
         let markdownTextActual = svPageParser.formatMessage($);
