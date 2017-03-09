@@ -21,7 +21,7 @@ class SVPageParser{
             text += removeSpecialCharacters($(offer).find('.menu-description .trimmings').text())  + "\n";
             text += '_' + removeSpecialCharacters($(offer).find('.price .price-item').text())  + "_\n";
             let provenance = removeSpecialCharacters($(offer).find('.provenance').text());
-            if(provenance !== ""){
+            if(provenance.length > 1){
                 text += '_' + provenance + "_\n\n";
             }else{
                 text += "\n";
