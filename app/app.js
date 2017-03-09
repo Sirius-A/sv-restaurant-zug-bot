@@ -1,7 +1,12 @@
 'use strict';
-const TelegramBot = require('node-telegram-bot-api');
+const Tgfancy = require("tgfancy");
 const bot_api_token = process.env.BOT_API_TOKEN;
-const tgBot  = new TelegramBot(bot_api_token, { polling: true });
+const tgBot  = new Tgfancy(bot_api_token, {
+    tgfancy: {
+        emojification: true,
+    },
+    polling: true
+});
 const CronJob = require('cron').CronJob;
 
 const Parser = require('./SVPageParser');
@@ -9,7 +14,13 @@ const Subscriptions = require('./subscriptions');
 const subscriptions = new Subscriptions();
 
 const weekdays = ["(Mon(day)?)","(Tue(sday)?)","(Wed(nesday)?)","Thu(rsday)?","Fri(day)?"];
-const weekdayRegex = new RegExp(weekdays.join("|"),'i');
+const weekdayRegex = new RegExp(weekdays.join("(@\w+)?|"),'i');
+
+let botUsername = process.env.BOT_USERNAME;
+if (botUsername === undefined){
+    botUsername = "FiveMoodsBot";
+}
+
 
 /* Daily cronjob to notify subscribers*/
 try {
@@ -22,15 +33,15 @@ try {
 }
 
 /* Routes */
-tgBot.onText(/\/get(Today)?$/mgi,getTodayHandler);
-tgBot.onText(/\/(get)?Daily/i,getDailyHandler);
-tgBot.onText(/\/(get)?PartTime/i,getPartTimeHandler);
-tgBot.onText(/\/start/i,startHandler);
-tgBot.onText(/\/stop/i,cancelSubscriptionsHandler);
-tgBot.onText(/\/cancel/i,cancelSubscriptionsHandler);
-tgBot.onText(/\/(get)?source/mgi,getSourceHandler);
+tgBot.onText(/\/get(Today)?(@\w+)?$/gmi,getTodayHandler);
+tgBot.onText(/\/(get)?Daily(@\w+)?$/gmi,getDailyHandler);
+tgBot.onText(/\/(get)?PartTime(@\w+)?/i,getPartTimeHandler);
+tgBot.onText(/\/start(@\w+)?/i,startHandler);
+tgBot.onText(/\/stop(@\w+)?/i,cancelSubscriptionsHandler);
+tgBot.onText(/\/cancel(@\w+)?/i,cancelSubscriptionsHandler);
+tgBot.onText(/\/(get)?source(@\w+)?/mgi,getSourceHandler);
 tgBot.onText(weekdayRegex,weekdayHandler);
-tgBot.onText(/Done.*/i,cancelWeekdaySelectionHandler);
+tgBot.onText(/Done.*(@\w+)?/i,cancelWeekdaySelectionHandler);
 // tgBot.onText(/notify/gi,notifySubscribers); //to test subscriber notifications
 
 /* Handlers */
@@ -54,7 +65,7 @@ function getDailyHandler(message) {
     subscriptions.add(chat,function () {
         let markdownText = "*Successfully added you to the daily subscriber list* \n" +
             "I will send you the menu at 10:00am from now on. \n" +
-            "You can send me /stop to quit that.";
+            `You can send me /stop@${botUsername} to quit that.`;
         tgBot.sendMessage(chatId,markdownText,{ parse_mode: 'Markdown'});
     });
 }
@@ -81,7 +92,7 @@ function getPartTimeHandler(message) {
 function weekdayHandler(message,match) {
     let chat = message.chat;
     let chatId = message.chat.id;
-    let markdownText = "Okey I will send you updates each " + match[0] ;
+    let markdownText = "Okay I will send you updates each " + match[0] ;
     let weekdayIndex = + weekdays.regexIndexOf(match[0]) + 1; //+1 since dates/days start on Sunday .
 
     subscriptions.addWeekday(chat,weekdayIndex,function () {
@@ -103,9 +114,9 @@ function cancelWeekdaySelectionHandler(message) {
         }
 
         if(weekdaysData === null){
-            markdownText = "You did not select any Weekdays ¯\\_(ツ)_/¯ \nI will not send you updates";
+            markdownText = " You did not select any Weekdays :confused: \nI will not send you updates";
         }else {
-            markdownText = "Alright. Here are the days I will send you the menu:";
+            markdownText = ":thumbsup: Alright. Here are the days I will send you the menu:";
             for (let weekday of weekdaysData.weekdays) {
                 let weekdayName = weekdays[weekday - 1].replace(/\(|\)|\?/gi, "");
                 markdownText += `\n- ${weekdayName}`;
@@ -128,7 +139,7 @@ function cancelSubscriptionsHandler(message) {
 
     subscriptions.remove(chat,function () {
         let markdownText = "*Successfully removed you from the daily subscriber list* \n" +
-            "I will no longer bother you with daily updates.";
+            "I will no longer bother you with daily updates. :wave:";
         tgBot.sendMessage(chatId,markdownText,{ parse_mode: 'Markdown'});
     });
 }
@@ -136,9 +147,10 @@ function cancelSubscriptionsHandler(message) {
 function startHandler(message) {
     let chatId = message.chat.id;
 
-    let markdownText = 'Hello! \n' +
-        'I can send you the menu for the SV restaurant in Zug. \n' +
-        'try /get or /Daily (for daily updates)';
+    let markdownText = 'Hello! :smile: \n' +
+        "I can send you the menu for the SV restaurant in Zug. \n" +
+        `- Try /get@${botUsername} to receive today's menu. \n` +
+        `- For regular notifications use /daily@${botUsername} or /partTime@${botUsername}`;
 
         tgBot.sendMessage(chatId,markdownText, { parse_mode: 'Markdown'});
 }
