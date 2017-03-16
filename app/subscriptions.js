@@ -49,22 +49,23 @@ class Subscriptions{
         callback();
     }
 
-    remove(chat, callback){
+    remove(chatId, callback){
         co(function*() {
             //connect to db
             var db = yield MongoClient.connect(mongodb_uri);
             console.log("Connected correctly to server");
 
             // delete a single document
-            yield db.collection('subscribers').removeOne({id:chat.id});
+            yield db.collection('subscribers').removeOne({id:chatId});
 
             // Close connection
             db.close();
         }).catch(function(err) {
             console.log(err.stack);
         });
-
-        callback();
+        if(typeof callback === 'function') {
+            callback();
+        }
     }
 
     getWeekdays(chat,callback){
