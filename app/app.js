@@ -71,12 +71,17 @@ function getDailyHandler(message) {
 }
 
 function getPartTimeHandler(message) {
+    let chatId = message.chat.id;
+
+    // remove current subscriptions before selecting new ones.
+    subscriptions.remove(chatId);
+
     const weekdaysKeyboard = [
         [{text: "Monday"},{text: "Tuesday"},],
         [{text: "Wednesday"},{text: "Thursday"}],
         [{text: "Friday"}],[{text: "Done!"}]
     ];
-    let chatId = message.chat.id;
+
     let markdownText = "Please select all weekdays you want to be notified.";
 
     let options = {
@@ -134,12 +139,11 @@ function cancelWeekdaySelectionHandler(message) {
     });
 }
 function cancelSubscriptionsHandler(message) {
-    let chat = message.chat;
     let chatId = message.chat.id;
 
-    subscriptions.remove(chat,function () {
+    subscriptions.remove(chatId,function () {
         let markdownText = "*Successfully removed you from the daily subscriber list* \n" +
-            "I will no longer bother you with daily updates. :wave:";
+            "I will no longer send you updates. :wave:";
         tgBot.sendMessage(chatId,markdownText,{ parse_mode: 'Markdown'});
     });
 }
