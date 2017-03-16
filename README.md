@@ -4,6 +4,7 @@
 [![Build Status](https://travis-ci.org/Sirius-A/sv-restaurant-zug-bot.svg?branch=master)](https://travis-ci.org/Sirius-A/sv-restaurant-zug-bot) [![Greenkeeper badge](https://badges.greenkeeper.io/Sirius-A/sv-restaurant-zug-bot.svg)](https://greenkeeper.io/) [![dependencies Status](https://david-dm.org/Sirius-A/sv-restaurant-zug-bot/status.svg)](https://david-dm.org/Sirius-A/sv-restaurant-zug-bot) [![devDependencies Status](https://david-dm.org/Sirius-A/sv-restaurant-zug-bot/dev-status.svg)](https://david-dm.org/Sirius-A/sv-restaurant-zug-bot?type=dev)
 
 A Telegram bot to retrieve the menu of the SV restaurant in Zug (called Five Moods).
+![Screenshot](screenshot.png)
 
 # Try it 
 Add the bot using http://telegram.me/FiveMoodsBot and call `/get@FiveMoodsBot` to receive today's menu.
@@ -28,11 +29,14 @@ If you want the bot to send you the menu regularly, try  `/getDaily@FiveMoodsBot
     This can be done in the run config of your IDE or directly in the console.
 
     ```
-    $ BOT_API_TOKEN='MY_SUP3R:SEC|2ET_4PI_T0K3N' node index.js
+    $ BOT_API_TOKEN='MY_SUP3R:SEC|2ET_4PI_T0K3N' npm start
     ```
+    **Note:** This bot also uses 2 more environment variables.
+     - `MONGODB_URI` as a connection string to mongoDB, where the subscriptions are stored.
+     - `BOT_USERNAME` the username of the bot, used to add its handle when listing the bot command.
 
-5. Once you’re satisfied with the behavior, commit all your files and deploy the app to a node.js provider of your choice. 
-Below are the steps required for [Heroku](www.heroku.com).
+5. Once you’re satisfied with the behavior, commit all your files and deploy the app to a node.js provider of your choice.
+Below are the steps required for [Heroku](https://www.heroku.com).
 
     ```
     $ heroku create five-moods-telegram-bot --region eu
@@ -52,9 +56,10 @@ Below are the steps required for [Heroku](www.heroku.com).
     $ heroku scale web=0 worker=1
     ```
 
+
 ## Credits and Thanks
- * [Roman Blum](https://github.com/rmnblm/) for creating the [hsr-lunchbot](hsr-lunchbot), which was used as a starting point for this project.
- * [Narek Abovyan](https://github.com/Naltox) for his [telegram-node-bot](https://github.com/Naltox/telegram-node-bot).
+ * [Roman Blum](https://github.com/rmnblm/) for creating the [hsr-lunchbot](https://github.com/rmnblm/HSR-LunchBot), which was used as a starting point for this project.
+ * [Gocho Mugo](https://github.com/GochoMugo) and [Yago_Perez](https://github.com/yagop) for their [node telegram api](https://github.com/GochoMugo/tgfancy) .
  * You for using this bot and thereby giving it a purpose in its ~~life~~ operation :heart:.
  
 ## Disclaimer
