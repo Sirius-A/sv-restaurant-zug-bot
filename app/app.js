@@ -46,7 +46,7 @@ tgBot.onText(/Done.*(@\w+)?/i,cancelWeekdaySelectionHandler);
 
 /* Handlers */
 function sendTodaysMenu(chatId) {
-    const url = 'http://siemens.sv-restaurant.ch/de/menuplan.html';
+    const url = 'http://siemens.sv-restaurant.ch/de/menuplan/';
     const parser = new Parser();
 
     parser.parse(url, function (markdownText) {

@@ -13,14 +13,13 @@ class SVPageParser{
     }
 
     formatMessage($) {
-        let offers = $('.offer');
+        let offers = $('.menu-item');
         let text = '';
         $(offers).each(function (i, offer) {
-            text += '*' + removeSpecialCharacters($(offer).find('.offer-description').text().trim()) + ': ';
-            text += removeSpecialCharacters($(offer).find('.menu-description .title').text()) + "*\n";
-            text += removeSpecialCharacters($(offer).find('.menu-description .trimmings').text())  + "\n";
-            text += '_' + removeSpecialCharacters($(offer).find('.price .price-item').text())  + "_\n";
-            let provenance = removeSpecialCharacters($(offer).find('.provenance').text());
+            text += '*' + removeSpecialCharacters($(offer).find('.menu-title').text().trim()) + '*\n';
+            text += removeSpecialCharacters($(offer).find('.menu-description').text()) + "\n";
+            text += '_' + removeSpecialCharacters($(offer).find('.prices-3').text())  + "_\n";
+            let provenance = removeSpecialCharacters($(offer).find('.menu-provenance').text());
             if(provenance.length > 1){
                 text += '_' + provenance + "_\n\n";
             }else{
