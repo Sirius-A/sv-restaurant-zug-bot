@@ -6,40 +6,32 @@ const SVPageParser = require('../app/SVPageParser');
 
 
 describe('The sv page formatting module', function(){
-    it('formats the menuplan page of 2016-02-14 correctly',function() {
-        let markdownTextExpected = "*chefs choice: Knusprig gebratene Entenbrust*\n" +
-            "an Balsamicojus\n" +
-            "Ofen Kartoffeln\n" +
-            "Grillgemüse\n" +
-            "_CHF 18.90_\n" +
-            "_Herkunft Fleisch: Ente / Ungarn_\n" +
-            "\n" +
-            "*dailys: Gemüseauflauf*\n" +
-            "mit Basilikumsauce\n" +
-            "und gebackenen Avocadoecken\n" +
-            "_CHF 14.50_\n" +
-            "\n" +
-            "*free choice: Sautierte Lammstreifen*\n" +
-            "Thymiansauce, Kartoffelgratin, Schwarzwurzel mit Sultanienen, \n" +
-            "Gemüseebly, Bouillongemüse, \n" +
-            "sautiertes Kürbisgemüse\n" +
-            "_100G 3.30_\n" +
-            "_Herkunft Fleisch: Lamm/ Neuseeland_\n" +
-            "\n" +
-            "*season market: Wrap mit Rindsstreifen*\n" +
-            "Cocktailsauce, Rucola, \n" +
-            "Tomaten, Eisbergsalat\n" +
-            "an bunten Blattsalaten\n" +
-            "_CHF 17.50_\n" +
-            "_Herkunft Fleisch: Rind / Schweiz_\n" +
-            "\n" +
-            "*go4 pasta: Agnolotti Fondue*\n" +
-            "Sauce Quattro Formaggi\n" +
-            "und Gemüse Ragout\n" +
-            "_CHF 14.90_\n" +
-            "\n";
+    it('formats the menuplan page of 2017-05-02 correctly',function() {
+        let markdownTextExpected = '*Ofenfrischer Lammgigot*\n' +
+            'mit Rosmarinjus\ndazu Kartoffelgratin\n' +
+            'und gratinierter Blumenkohl\n' +
+            '_18.50 CHF_\n' +
+            '_Herkunft Fleisch: Lamm / Neuseeland_\n\n' +
+            '*Geschmortes Rindsgulasch*\n' +
+            'in Rotweinsauce\n' +
+            'dazu Käsepolenta\n' +
+            'und Ratatouille\n' +
+            '_14.50 CHF_\n' +
+            '_Herkunft Fleisch: Rind / Schweiz_\n\n' +
+            '*Frisch vom Feld*\nErdbeertörtchen mit Vanillecreme\n' +
+            'Unsere Doris verzaubert Sie\nheute mit Erbeeren\n_5.50 CHF_\n\n' +
+            '*Fusilli Primavera Magic*\n' +
+            'Hausgemachte Pasta mit\nOlivenöl, Dörrtomaten, Röstgemüse\n' +
+            'und Pesto\n' +
+            '_12.90 CHF_\n\n' +
+            '*Tandoori-Chicken*\n' +
+            'Linseneintopf, Kichererbsen mit Koriander, \n' +
+            'Mango Masala, gebratener Paneer Käse, \n' +
+            'Roti Brot, Samosa\n' +
+            '_3.30 100G_\n' +
+            '_Herkunft Fleisch: Geflügel / Schweiz_\n\n';
 
-        let menuplanPath = __dirname + "/menuplan2016-02-14.html";
+        let menuplanPath = __dirname + "/Menuplan.html";
         let svPageParser = new SVPageParser();
 
         let $ = cheerio.load(fs.readFileSync(menuplanPath));
@@ -50,17 +42,20 @@ describe('The sv page formatting module', function(){
     it('replaces markdown syntax characters in the menu',function () {
 
         let svPageParser = new SVPageParser();
-        let $ = cheerio.load("<div class='offer'>" +
-            "<p class='offer-description'>daily`s:</p> " +
-            "<div class='menu-description'><p class='title'>Super-Duper Menu</p></div>" +
-            "<div class='menu-description'><p class='trimmings'>A multi line*, <br\>" +
+        let $ = cheerio.load("<div id='menu-plan-tab1' class='menu-plan-grid'>" +
+            "<div class='menu-item'>" +
+            "<div class='menu-title'>Super-Duper Menu::</div>" +
+            "<div class='menu-description'><p class='trimmings'>A multi line*, <br\><br>" +
             "*dish</p></div>" +
-            "<div class='price'><span class='price-item'>#CHF 16.90_</span></div>" +
+            "<div class='menu-prices prices-3'><span class='price'>" +
+            "<span class='val'>18.50</span><span class='desc'>CHF</span>" +
+            "</span></div>" +
+            "</div>"+
             "</div>"
         );
-        let markdownTextExpected = "*dailys:: Super-Duper Menu*\n" +
-            "A multi line, dish\n" +
-            "_CHF 16.90_\n\n";
+        let markdownTextExpected = "*Super-Duper Menu::*\n" +
+            "A multi line, \n\ndish\n" +
+            "_18.50 CHF_\n\n";
         let markdownTextActual = svPageParser.formatMessage($);
         assert.equal(markdownTextActual, markdownTextExpected, "escapes the relevant ");
     });
