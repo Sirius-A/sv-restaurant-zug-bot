@@ -13,28 +13,30 @@ class SVPageParser{
     }
 
     formatMessage($) {
-        let offers = $('.menu-item');
+        let offers = $('#menu-plan-tab1').find('.menu-item');
         let text = '';
         $(offers).each(function (i, offer) {
+            let menuDescription = $(offer).find('.menu-description');
+            menuDescription.find('br').replaceWith('\n');
+
             text += '*' + removeSpecialCharacters($(offer).find('.menu-title').text().trim()) + '*\n';
-            text += removeSpecialCharacters($(offer).find('.menu-description').text()) + "\n";
-            text += '_' + removeSpecialCharacters($(offer).find('.prices-3').text())  + "_\n";
+            text += removeSpecialCharacters(menuDescription.text()) + '\n';
+            text += '_' + removeSpecialCharacters($(offer).find('.prices-3 .val').text() + ' ' + $(offer).find('.prices-3 .desc').text()) + "_\n";
             let provenance = removeSpecialCharacters($(offer).find('.menu-provenance').text());
-            if(provenance.length > 1){
+            if (provenance.length > 1) {
                 text += '_' + provenance + "_\n\n";
-            }else{
+            } else {
                 text += "\n";
             }
 
         });
 
-        function removeSpecialCharacters(text){
-            return(text.replace(/`|\*|_|#|\r/g, ''));
+        function removeSpecialCharacters(text) {
+            return (text.replace(/`|\*|_|#|\r/g, ''));
         }
 
         return text;
     }
-
 }
 
 module.exports = SVPageParser;
