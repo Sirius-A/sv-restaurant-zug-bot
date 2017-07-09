@@ -8,25 +8,21 @@ const SVPageParser = require('../app/SVPageParser');
 describe('The sv page formatting module', function(){
     it('formats the menuplan page of 2017-05-02 correctly',function() {
         let markdownTextExpected = '*Ofenfrischer Lammgigot*\n' +
-            'mit Rosmarinjus\ndazu Kartoffelgratin\n' +
+            'mit Rosmarinjus dazu Kartoffelgratin ' +
             'und gratinierter Blumenkohl\n' +
             '_18.50 CHF_\n' +
             '_Herkunft Fleisch: Lamm / Neuseeland_\n\n' +
             '*Geschmortes Rindsgulasch*\n' +
-            'in Rotweinsauce\n' +
-            'dazu Käsepolenta\n' +
-            'und Ratatouille\n' +
+            'in Rotweinsauce dazu Käsepolenta und Ratatouille\n' +
             '_14.50 CHF_\n' +
             '_Herkunft Fleisch: Rind / Schweiz_\n\n' +
-            '*Frisch vom Feld*\nErdbeertörtchen mit Vanillecreme\n' +
-            'Unsere Doris verzaubert Sie\nheute mit Erbeeren\n_5.50 CHF_\n\n' +
+            '*Frisch vom Feld*\nErdbeertörtchen mit Vanillecreme ' +
+            'Unsere Doris verzaubert Sie heute mit Erbeeren\n_5.50 CHF_\n\n' +
             '*Fusilli Primavera Magic*\n' +
-            'Hausgemachte Pasta mit\nOlivenöl, Dörrtomaten, Röstgemüse\n' +
-            'und Pesto\n' +
+            'Hausgemachte Pasta mit Olivenöl, Dörrtomaten, Röstgemüse und Pesto\n' +
             '_12.90 CHF_\n\n' +
             '*Tandoori-Chicken*\n' +
-            'Linseneintopf, Kichererbsen mit Koriander, \n' +
-            'Mango Masala, gebratener Paneer Käse, \n' +
+            'Linseneintopf, Kichererbsen mit Koriander,  Mango Masala, gebratener Paneer Käse,  ' +
             'Roti Brot, Samosa\n' +
             '_3.30 100G_\n' +
             '_Herkunft Fleisch: Geflügel / Schweiz_\n\n';
@@ -54,7 +50,7 @@ describe('The sv page formatting module', function(){
             "</div>"
         );
         let markdownTextExpected = "*Super-Duper Menu::*\n" +
-            "A multi line, \n\ndish\n" +
+            "A multi line,   dish\n" +
             "_18.50 CHF_\n\n";
         let markdownTextActual = svPageParser.formatMessage($);
         assert.equal(markdownTextActual, markdownTextExpected, "escapes the relevant ");

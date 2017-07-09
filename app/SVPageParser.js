@@ -17,7 +17,7 @@ class SVPageParser{
         let text = '';
         $(offers).each(function (i, offer) {
             let menuDescription = $(offer).find('.menu-description');
-            menuDescription.find('br').replaceWith('\n');
+            menuDescription.find('br').replaceWith(' ');
 
             text += '*' + removeSpecialCharacters($(offer).find('.menu-title').text().trim()) + '*\n';
             text += removeSpecialCharacters(menuDescription.text()) + '\n';
