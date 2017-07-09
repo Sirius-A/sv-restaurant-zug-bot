@@ -21,7 +21,6 @@ if (botUsername === undefined){
     botUsername = "FiveMoodsBot";
 }
 
-
 /* Daily cronjob to notify subscribers*/
 try {
     new CronJob('00 10 * * 1-5', function () {
@@ -34,6 +33,7 @@ try {
 
 /* Routes */
 tgBot.onText(/\/get(Today)?(@\w+)?$/gmi,getTodayHandler);
+tgBot.onText(/\/(get)?Week(@\w+)?$/gmi,getWeekHandler);
 tgBot.onText(/\/(get)?Daily(@\w+)?$/gmi,getDailyHandler);
 tgBot.onText(/\/(get)?PartTime(@\w+)?/i,getPartTimeHandler);
 tgBot.onText(/\/start(@\w+)?/i,startHandler);
@@ -45,17 +45,14 @@ tgBot.onText(/Done.*(@\w+)?/i,cancelWeekdaySelectionHandler);
 // tgBot.onText(/notify/gi,notifySubscribers); //to test subscriber notifications
 
 /* Handlers */
-function sendTodaysMenu(chatId) {
-    const url = 'http://siemens.sv-restaurant.ch/de/menuplan/';
-    const parser = new Parser();
-
-    parser.parse(url, function (markdownText) {
-        tgBot.sendMessage(chatId, markdownText, {parse_mode: 'Markdown'});
-    });
-}
 function getTodayHandler(message) {
     let chatId = message.chat.id;
     sendTodaysMenu(chatId);
+}
+
+function getWeekHandler(message) {
+    let chatId = message.chat.id;
+    sendWeekMenu(chatId);
 }
 
 function getDailyHandler(message) {
@@ -159,8 +156,31 @@ function startHandler(message) {
         tgBot.sendMessage(chatId,markdownText, { parse_mode: 'Markdown'});
 }
 
-function notifySubscribers() {
+function getSourceHandler(message){
+    let chatId = message.chat.id;
 
+    let markdownText = 'This bot is written by Fabio Zuber utilizing Node.js.\n' +
+        'The code is open source. Feel free to check it out on [GitHub](https://github.com/Sirius-A/sv-restaurant-zug-bot).';
+    tgBot.sendMessage(chatId,markdownText,{ parse_mode: 'Markdown'});
+}
+
+/* Menu Send Functions */
+function sendTodaysMenu(chatId) {
+    const url = 'http://siemens.sv-restaurant.ch/de/menuplan/';
+    const parser = new Parser();
+
+    parser.parse(url, function (markdownText) {
+        tgBot.sendMessage(chatId, markdownText, {parse_mode: 'Markdown'});
+    });
+}
+
+function sendWeekMenu(chatId) {
+    const url = 'http://siemens.sv-restaurant.ch/de/menuplan/';
+    const parser = new Parser();
+
+}
+
+function notifySubscribers() {
     console.log("notify Subscribers");
     subscriptions.forAllDailly(function (subscriber) {
         sendTodaysMenu(subscriber.id);
@@ -171,14 +191,6 @@ function notifySubscribers() {
         sendTodaysMenu(subscriber.id);
     })
 ;}
-
-function getSourceHandler(message){
-    let chatId = message.chat.id;
-
-    let markdownText = 'This bot is written by Fabio Zuber utilizing Node.js.\n' +
-        'The code is open source. Feel free to check it out on [GitHub](https://github.com/Sirius-A/sv-restaurant-zug-bot).';
-    tgBot.sendMessage(chatId,markdownText,{ parse_mode: 'Markdown'});
-}
 
 /**
  * Regular Expresion IndexOf for Arrays
