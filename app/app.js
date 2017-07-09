@@ -169,7 +169,7 @@ function sendTodaysMenu(chatId) {
     const url = 'http://siemens.sv-restaurant.ch/de/menuplan/';
     const parser = new Parser();
 
-    parser.parse(url, function (markdownText) {
+    parser.parseToday(url, function (markdownText) {
         tgBot.sendMessage(chatId, markdownText, {parse_mode: 'Markdown'});
     });
 }

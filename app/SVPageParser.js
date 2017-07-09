@@ -3,7 +3,7 @@ const request = require('request');
 const cheerio = require('cheerio');
 
 class SVPageParser{
-    parse(url, callback) {
+    parseToday(url, callback) {
         const self = this;
         request(url, function(err, resp, body){
             let $ = cheerio.load(body);
