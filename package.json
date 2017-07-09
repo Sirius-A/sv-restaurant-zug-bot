@@ -37,7 +37,7 @@
     "glob": "^7.1.1",
     "jshint": "^2.9.4",
     "jshint-stylish": "^2.2.1",
-    "mocha": "^3.2.0"
+    "mocha": "^3.4.2"
   },
   "jshintConfig": {
     "esversion": 6,
