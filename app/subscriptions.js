@@ -75,7 +75,7 @@ class Subscriptions{
             console.log("Connected correctly to server");
 
             // Insert/update a single document
-            db.collection('subscribers').findOne({id:chat.id}, {weekdays:1},callback);
+            db.collection('subscribers').findOne({ $and: [ {id:chat.id}, {weekdays:{$exists: true}}]},callback);
 
             // Close connection
             db.close();

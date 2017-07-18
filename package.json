@@ -8,10 +8,10 @@
   "main": "index.js",
   "scripts": {
     "start": "node app/app.js",
-    "start-debug": "node --debug-brk app/app.js",
+    "start-debug": "node --inspect app/app.js",
     "lint": "jshint --reporter=node_modules/jshint-stylish app",
     "test": "mocha test/",
-    "test-debug": "mocha test/ --debug-brk",
+    "test-debug": "mocha test/ --inspect",
     "pretest": "npm run lint"
   },
   "repository": {
@@ -28,7 +28,7 @@
     "cheerio": "^1.0.0-rc.2",
     "co": "^4.6.0",
     "cron": "^1.2.1",
-    "mongodb": "^2.2.24",
+    "mongodb": "^v2.2.30",
     "request": "^2.80.0",
     "tgfancy": "^0.10.0"
   },
