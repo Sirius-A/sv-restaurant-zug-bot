@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "description": "A Telegram bot to retrieve the menu of the SV restaurant in Zug (called Five Moods)",
   "engines": {
-    "node": ">=6.0.0"
+    "node": ">=8.1.4"
   },
   "main": "index.js",
   "scripts": {
@@ -37,7 +37,7 @@
     "glob": "^7.1.1",
     "jshint": "^2.9.4",
     "jshint-stylish": "^2.2.1",
-    "mocha": "^3.2.0"
+    "mocha": "^3.4.2"
   },
   "jshintConfig": {
     "esversion": 6,
