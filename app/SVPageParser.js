@@ -31,7 +31,7 @@ class SVPageParser{
             let dayName = $(day).find('.day').text();
             let dayDate= $(day).find('.date').text();
 
-            text += `*${dayName} ${dayDate} \n*`
+            text += `*${dayName} ${dayDate} \n*`;
         });
 
         return text;

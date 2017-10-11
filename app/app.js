@@ -176,7 +176,7 @@ function sendTodaysMenu(chatId) {
 function sendWeekMenu(chatId) {
     parser.parseWeek(url, function (markdownText) {
         tgBot.sendMessage(chatId, markdownText, {parse_mode: 'Markdown'});
-    })
+    });
 }
 
 function notifySubscribers() {
