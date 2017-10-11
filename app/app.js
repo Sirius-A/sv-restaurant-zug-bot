@@ -10,9 +10,11 @@ const tgBot  = new Tgfancy(bot_api_token, {
 const CronJob = require('cron').CronJob;
 
 const Parser = require('./SVPageParser');
+const parser = new Parser();
 const Subscriptions = require('./subscriptions');
 const subscriptions = new Subscriptions();
 
+const url = 'http://siemens.sv-restaurant.ch/de/menuplan/';
 const weekdays = ["(Mon(day)?)","(Tue(sday)?)","(Wed(nesday)?)","Thu(rsday)?","Fri(day)?"];
 const weekdayRegex = new RegExp(weekdays.join("(@\w+)?|"),'i');
 
@@ -166,18 +168,15 @@ function getSourceHandler(message){
 
 /* Menu Send Functions */
 function sendTodaysMenu(chatId) {
-    const url = 'http://siemens.sv-restaurant.ch/de/menuplan/';
-    const parser = new Parser();
-
     parser.parseToday(url, function (markdownText) {
         tgBot.sendMessage(chatId, markdownText, {parse_mode: 'Markdown'});
     });
 }
 
 function sendWeekMenu(chatId) {
-    const url = 'http://siemens.sv-restaurant.ch/de/menuplan/';
-    const parser = new Parser();
-
+    parser.parseWeek(url, function (markdownText) {
+        tgBot.sendMessage(chatId, markdownText, {parse_mode: 'Markdown'});
+    })
 }
 
 function notifySubscribers() {
