@@ -31,7 +31,7 @@ describe('The sv page formatting module', function(){
         let svPageParser = new SVPageParser();
 
         let $ = cheerio.load(fs.readFileSync(menuplanPath));
-        let markdownTextActual = svPageParser.formatMessage($);
+        let markdownTextActual = svPageParser.formatDayMenu($);
         assert.equal(markdownTextActual, markdownTextExpected, "Page is formatted to the correct markdown");
     });
 
@@ -52,7 +52,7 @@ describe('The sv page formatting module', function(){
         let markdownTextExpected = "*Super-Duper Menu::*\n" +
             "A multi line,   dish\n" +
             "_18.50 CHF_\n\n";
-        let markdownTextActual = svPageParser.formatMessage($);
+        let markdownTextActual = svPageParser.formatDayMenu($);
         assert.equal(markdownTextActual, markdownTextExpected, "escapes the relevant ");
     });
 });

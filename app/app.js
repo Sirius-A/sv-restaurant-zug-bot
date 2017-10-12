@@ -14,7 +14,6 @@ const parser = new Parser();
 const Subscriptions = require('./subscriptions');
 const subscriptions = new Subscriptions();
 
-const url = 'http://siemens.sv-restaurant.ch/de/menuplan/';
 const weekdays = ["(Mon(day)?)","(Tue(sday)?)","(Wed(nesday)?)","Thu(rsday)?","Fri(day)?"];
 const weekdayRegex = new RegExp(weekdays.join("(@\w+)?|"),'i');
 
@@ -34,7 +33,7 @@ try {
 }
 
 /* Routes */
-tgBot.onText(/\/get(Today)?(@\w+)?$/gmi,getTodayHandler);
+tgBot.onText(/\/(get)?(Today)?(@\w+)?$/gmi,getTodayHandler);
 tgBot.onText(/\/(get)?Week(@\w+)?$/gmi,getWeekHandler);
 tgBot.onText(/\/(get)?Daily(@\w+)?$/gmi,getDailyHandler);
 tgBot.onText(/\/(get)?PartTime(@\w+)?/i,getPartTimeHandler);
@@ -122,7 +121,7 @@ function cancelWeekdaySelectionHandler(message) {
         }else {
             markdownText = ":thumbsup: Alright. Here are the days I will send you the menu:";
             for (let weekday of weekdaysData.weekdays) {
-                let weekdayName = weekdays[weekday - 1].replace(/\(|\)|\?/gi, "");
+                let weekdayName = weekdays[weekday - 1].replace(/[()?]/gi, "");
                 markdownText += `\n- ${weekdayName}`;
             }
         }
@@ -168,13 +167,13 @@ function getSourceHandler(message){
 
 /* Menu Send Functions */
 function sendTodaysMenu(chatId) {
-    parser.parseToday(url, function (markdownText) {
+    parser.parseToday(function (markdownText) {
         tgBot.sendMessage(chatId, markdownText, {parse_mode: 'Markdown'});
     });
 }
 
 function sendWeekMenu(chatId) {
-    parser.parseWeek(url, function (markdownText) {
+    parser.parseWeek(function (markdownText) {
         tgBot.sendMessage(chatId, markdownText, {parse_mode: 'Markdown'});
     });
 }
@@ -192,17 +191,17 @@ function notifySubscribers() {
 ;}
 
 /**
- * Regular Expresion IndexOf for Arrays
+ * Regular Expression IndexOf for Arrays
  * This little addition to the Array prototype will iterate over array
  * and return the index of the first element which matches the provided
- * regular expresion.
+ * regular expression.
  * Note: This will not match on objects.
- * @param  {RegEx}   rx The regular expression to test with. E.g. /-ba/gim
- * @return {Numeric} -1 means not found
+ * @param  {RegExp}   rx The regular expression to test with. E.g. /-ba/gim
+ * @return {Number} -1 means not found
  */
 if (typeof Array.prototype.regexIndexOf === 'undefined') {
     Array.prototype.regexIndexOf = function (RegEx) {
-        for (var i in this) {
+        for (let i in this) {
             if (RegEx.match(this[i].toString())) {
                 return i;
             }
