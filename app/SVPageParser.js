@@ -31,8 +31,9 @@ class SVPageParser{
             let dayDate= $(day).find('.date').text();
             let offers = $(`#menu-plan-tab${i+1}`).find('.menu-item');
 
-            text += `*${dayName} ${dayDate} \n*`;
-            text += this.formatDayMenu($, offers) + '\n\n';
+            text += `*${dayName} ${dayDate}* \n`;
+            text += `========\n`;
+            text += this.formatDayMenu($, offers) + '\n';
         });
 
         return text;
