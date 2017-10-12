@@ -6,21 +6,18 @@ const url = 'http://siemens.sv-restaurant.ch/de/menuplan/';
 class SVPageParser{
 
     parseToday(callback) {
-        const self = this;
-        request(url, function(err, resp, body){
+        request(url, (err, resp, body) => {
             let $ = cheerio.load(body);
-
             let offers = $('#menu-plan-tab1').find('.menu-item');
-            let message = self.formatDayMenu($, offers);
+            let message = this.formatDayMenu($, offers);
             callback(message);
         });
     }
 
     parseWeek(callback) {
-        const self = this;
-        request(url, function(err, resp, body){
+        request(url, (err, resp, body) => {
             let $ = cheerio.load(body);
-            let message = self.formatWeek($);
+            let message = this.formatWeek($);
             callback(message);
         });
     }
@@ -42,7 +39,6 @@ class SVPageParser{
     }
 
     formatDayMenu($, offers) {
-        // let offers = $('#menu-plan-tab1').find('.menu-item');
         let text = '';
         $(offers).each(function (i, offer) {
             let menuDescription = $(offer).find('.menu-description');
@@ -57,7 +53,6 @@ class SVPageParser{
             } else {
                 text += "\n";
             }
-
         });
 
         function removeSpecialCharacters(text) {
