@@ -1,14 +1,14 @@
 'use strict';
-var mongodb_uri = process.env.MONGODB_URI;
-var MongoClient = require('mongodb').MongoClient,
-    co = require('co');
+const mongodb_uri = process.env.MONGODB_URI;
+const MongoClient = require('mongodb').MongoClient,
+      co = require('co');
 
 class Subscriptions{
 
     add(chat,callback){
         co(function*() {
             //connect to db
-            var db = yield MongoClient.connect(mongodb_uri);
+            const db = yield MongoClient.connect(mongodb_uri);
             console.log("Connected correctly to server");
 
             // Insert/update a single document
@@ -30,7 +30,7 @@ class Subscriptions{
     addWeekday(chat, weekday, callback){
         co(function*() {
             //connect to db
-            var db = yield MongoClient.connect(mongodb_uri);
+            const db = yield MongoClient.connect(mongodb_uri);
             console.log("Connected correctly to server");
 
             // Insert/update a single document
@@ -52,7 +52,7 @@ class Subscriptions{
     remove(chatId, callback){
         co(function*() {
             //connect to db
-            var db = yield MongoClient.connect(mongodb_uri);
+            const db = yield MongoClient.connect(mongodb_uri);
             console.log("Connected correctly to server");
 
             // delete a single document
@@ -71,7 +71,7 @@ class Subscriptions{
     getWeekdays(chat,callback){
         co(function*() {
             //connect to db
-            var db = yield MongoClient.connect(mongodb_uri);
+            const db = yield MongoClient.connect(mongodb_uri);
             console.log("Connected correctly to server");
 
             // Insert/update a single document
@@ -88,7 +88,7 @@ class Subscriptions{
     forAllDailly(next){
         co(function*() {
             //connect to db
-            var db = yield MongoClient.connect(mongodb_uri);
+            const db = yield MongoClient.connect(mongodb_uri);
             console.log("Connected correctly to server");
 
             //find all daily subs
@@ -103,7 +103,7 @@ class Subscriptions{
     forAllParttime(weekdayIndex,next){
         co(function*() {
             //connect to db
-            var db = yield MongoClient.connect(mongodb_uri);
+            const db = yield MongoClient.connect(mongodb_uri);
             console.log("Connected correctly to server");
 
             // find all documents containing a given weekday
