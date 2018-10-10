@@ -1,19 +1,45 @@
 'use strict';
 const request = require('request');
 const cheerio = require('cheerio');
+const url = 'http://siemens.sv-restaurant.ch/de/menuplan/';
 
 class SVPageParser{
-    parse(url, callback) {
-        const self = this;
-        request(url, function(err, resp, body){
+
+    parseToday(callback) {
+        request(url, (err, resp, body) => {
             let $ = cheerio.load(body);
-            let message = self.formatMessage($);
+            let offers = $('#menu-plan-tab1').find('.menu-item');
+            let message = this.formatDayMenu($, offers);
             callback(message);
         });
     }
 
-    formatMessage($) {
-        let offers = $('#menu-plan-tab1').find('.menu-item');
+    parseWeek(callback) {
+        request(url, (err, resp, body) => {
+            let $ = cheerio.load(body);
+            let message = this.formatWeek($);
+            callback(message);
+        });
+    }
+
+    formatWeek($) {
+        let days = $('.day-nav').find('li');
+
+        let text = '';
+        $(days).each((i, day) => {
+            let dayName = $(day).find('.day').text();
+            let dayDate= $(day).find('.date').text();
+            let offers = $(`#menu-plan-tab${i+1}`).find('.menu-item');
+
+            text += `*${dayName} ${dayDate}* \n`;
+            text += `========\n`;
+            text += this.formatDayMenu($, offers) + '\n';
+        });
+
+        return text;
+    }
+
+    formatDayMenu($, offers) {
         let text = '';
         $(offers).each(function (i, offer) {
             let menuDescription = $(offer).find('.menu-description');
@@ -28,11 +54,10 @@ class SVPageParser{
             } else {
                 text += "\n";
             }
-
         });
 
         function removeSpecialCharacters(text) {
-            return (text.replace(/`|\*|_|#|\r/g, ''));
+            return (text.replace(/[`*_#\r]/g, ''));
         }
 
         return text;
