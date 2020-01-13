@@ -35,7 +35,7 @@
   "devDependencies": {
     "chai": "^4.0.1",
     "glob": "^7.1.1",
-    "jshint": "^2.9.4",
+    "jshint": "^2.11.0",
     "jshint-stylish": "^2.2.1",
     "mocha": "^5.2.0"
   },
