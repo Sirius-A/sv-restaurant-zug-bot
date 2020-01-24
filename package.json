@@ -27,7 +27,7 @@
   "dependencies": {
     "cheerio": "^1.0.0-rc.2",
     "co": "^4.6.0",
-    "cron": "^1.2.1",
+    "cron": "^1.8.2",
     "mongodb": "^2.2.30",
     "request": "^2.80.0",
     "tgfancy": "^0.13.0"
