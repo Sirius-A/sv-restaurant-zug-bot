@@ -45,6 +45,7 @@ class SVPageParser{
       let menuDescription = $(offer).find('.menu-description');
       menuDescription.find('br').replaceWith(' ');
 
+      text += '_' + removeSpecialCharacters($(offer).find('.menuline').text()) + '_\n';
       text += '*' + removeSpecialCharacters($(offer).find('.menu-title').text().trim()) + '*\n';
       text += removeSpecialCharacters(menuDescription.text()) + '\n';
       text += '_' + removeSpecialCharacters($(offer).find('.prices-3 .val').text() + ' ' + $(offer).find('.prices-3 .desc').text()) + "_\n";
