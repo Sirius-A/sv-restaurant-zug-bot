@@ -1,6 +1,7 @@
 'use strict';
 const Tgfancy = require("tgfancy");
 const bot_api_token = process.env.BOT_API_TOKEN;
+
 const tgBot  = new Tgfancy(bot_api_token, {
   tgfancy: {
     emojification: true,

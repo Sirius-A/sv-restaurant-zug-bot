@@ -1,8 +1,9 @@
 const MongoClient = require('mongodb').MongoClient
+const mongodb_uri = process.env.MONGODB_URI;
 
 class Subscriptions{
   async add(chat,callback){
-    client = new MongoClient(mongodb_uri);
+    const client = new MongoClient(mongodb_uri);
     try {
       const db = client.db('sv-bot');
       await db.collection('subscribers').updateOne(
@@ -11,7 +12,6 @@ class Subscriptions{
         { upsert: true}
       );
     } finally {
-      // Ensures that the client will close when you finish/error
       await client.close();
     }
 
@@ -19,7 +19,7 @@ class Subscriptions{
   }
 
   async addWeekday(chat, weekday, callback){
-    client = new MongoClient(mongodb_uri);
+    const client = new MongoClient(mongodb_uri);
     try {
       const db = client.db('sv-bot');
 
@@ -37,12 +37,12 @@ class Subscriptions{
   }
 
   async remove(chatId, callback){
-    client = new MongoClient(mongodb_uri);
+    const client = new MongoClient(mongodb_uri);
     try {
       const db = client.db('sv-bot');
 
       // delete a single document
-      await db.collection('subscribers').removeOne({id:chatId});
+      await db.collection('subscribers').deleteOne({id:chatId});
 
     } finally {
       // Ensures that the client will close when you finish/error
@@ -54,7 +54,7 @@ class Subscriptions{
   }
 
   async getWeekdays(chat,callback){
-    client = new MongoClient(mongodb_uri);
+    const client = new MongoClient(mongodb_uri);
     try {
       const db = client.db('sv-bot');
       // Insert/update a single document
@@ -67,8 +67,8 @@ class Subscriptions{
 
   }
 
-  async forAllDailly(next){
-    client = new MongoClient(mongodb_uri);
+  async forAllDaily(next){
+    const client = new MongoClient(mongodb_uri);
     try {
       const db = client.db('sv-bot');
       console.log("Connected correctly to server");
@@ -83,7 +83,7 @@ class Subscriptions{
   }
 
   async forAllParttime(weekdayIndex, next){
-    client = new MongoClient(mongodb_uri);
+    const client = new MongoClient(mongodb_uri);
     try {
       const db = client.db('sv-bot');
       console.log("Connected correctly to server");
