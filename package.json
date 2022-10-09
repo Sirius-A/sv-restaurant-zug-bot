@@ -9,15 +9,12 @@
   "scripts": {
     "start": "node app/app.js",
     "start-debug": "node --inspect app/app.js",
-    "lint": "jshint --reporter=node_modules/jshint-stylish app",
+    "lint": "eslint",
     "test": "mocha test/",
     "test-debug": "mocha test/ --inspect",
     "pretest": "npm run lint"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Sirius-A/sv-restaurant-zug-bot.git"
-  },
+  "repository": "git+https://github.com/Sirius-A/sv-restaurant-zug-bot.git",
   "author": "Fabio Zuber",
   "license": "MIT",
   "bugs": {
@@ -34,14 +31,9 @@
   },
   "devDependencies": {
     "chai": "^4.3.6",
+    "eslint": ">=5.16.0",
+    "eslint-config-google": "^0.14.0",
     "glob": "^8.0.3",
-    "jshint": "^2.13.5",
-    "jshint-stylish": "^2.2.1",
     "mocha": "^10.0.0"
-  },
-  "jshintConfig": {
-    "esversion": 6,
-    "node": true,
-    "mocha": true
   }
 }
