@@ -1,26 +1,31 @@
 'use strict';
 const assert = require('chai').assert;
 const fs = require('fs');
-const cheerio = require("cheerio/lib/static.js");
+const cheerio = require('cheerio');
 const SVPageParser = require('../app/SVPageParser');
 
 
 describe('The sv page formatting module', function(){
     it('formats the menuplan page of 2017-05-02 correctly',function() {
-        let markdownTextExpected = '*Ofenfrischer Lammgigot*\n' +
+        let markdownTextExpected = '__\n' +
+            '*Ofenfrischer Lammgigot*\n' +
             'mit Rosmarinjus dazu Kartoffelgratin ' +
             'und gratinierter Blumenkohl\n' +
             '_18.50 CHF_\n' +
             '_Herkunft Fleisch: Lamm / Neuseeland_\n\n' +
+            '__\n' +
             '*Geschmortes Rindsgulasch*\n' +
             'in Rotweinsauce dazu Käsepolenta und Ratatouille\n' +
             '_14.50 CHF_\n' +
             '_Herkunft Fleisch: Rind / Schweiz_\n\n' +
+            '__\n' +
             '*Frisch vom Feld*\nErdbeertörtchen mit Vanillecreme ' +
             'Unsere Doris verzaubert Sie heute mit Erbeeren\n_5.50 CHF_\n\n' +
+            '__\n' +
             '*Fusilli Primavera Magic*\n' +
             'Hausgemachte Pasta mit Olivenöl, Dörrtomaten, Röstgemüse und Pesto\n' +
             '_12.90 CHF_\n\n' +
+            '__\n' +
             '*Tandoori-Chicken*\n' +
             'Linseneintopf, Kichererbsen mit Koriander,  Mango Masala, gebratener Paneer Käse,  ' +
             'Roti Brot, Samosa\n' +
@@ -50,7 +55,8 @@ describe('The sv page formatting module', function(){
             "</div>"+
             "</div>"
         );
-        let markdownTextExpected = "*Super-Duper Menu::*\n" +
+        let markdownTextExpected = "__\n" +
+           "*Super-Duper Menu::*\n" +
             "A multi line,   dish\n" +
             "_18.50 CHF_\n\n";
 
