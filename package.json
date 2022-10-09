@@ -9,7 +9,7 @@
   "scripts": {
     "start": "node app/app.js",
     "start-debug": "node --inspect app/app.js",
-    "lint": "eslint",
+    "lint": "eslint .",
     "test": "mocha test/",
     "test-debug": "mocha test/ --inspect",
     "pretest": "npm run lint"
