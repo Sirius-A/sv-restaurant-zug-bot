@@ -1,7 +1,6 @@
 # SV restaurant zug bot (@FiveMoodsBot)
 
-
-[![Build Status](https://travis-ci.org/Sirius-A/sv-restaurant-zug-bot.svg?branch=master)](https://travis-ci.org/Sirius-A/sv-restaurant-zug-bot) [![Greenkeeper badge](https://badges.greenkeeper.io/Sirius-A/sv-restaurant-zug-bot.svg)](https://greenkeeper.io/) [![dependencies Status](https://david-dm.org/Sirius-A/sv-restaurant-zug-bot/status.svg)](https://david-dm.org/Sirius-A/sv-restaurant-zug-bot) [![devDependencies Status](https://david-dm.org/Sirius-A/sv-restaurant-zug-bot/dev-status.svg)](https://david-dm.org/Sirius-A/sv-restaurant-zug-bot?type=dev)
+[![Build Status](https://travis-ci.org/Sirius-A/sv-restaurant-zug-bot.svg?branch=master)](https://travis-ci.org/Sirius-A/sv-restaurant-zug-bot) 
 
 A Telegram bot to retrieve the menu of the SV restaurant in Zug (called Five Moods).
 ![Screenshot](screenshot.png)
@@ -21,7 +20,7 @@ If you want the bot to send you the menu regularly, try  `/getDaily@FiveMoodsBot
 2. Install all packages with
 
     ```
-    $ npm install
+    $ yarn
     ```
 
 3. To start the bot you will need an Telegram API token. Talk to the [BotFather](https://telegram.me/BotFather) for that.
@@ -29,7 +28,7 @@ If you want the bot to send you the menu regularly, try  `/getDaily@FiveMoodsBot
     This can be done in the run config of your IDE or directly in the console.
 
     ```
-    $ BOT_API_TOKEN='MY_SUP3R:SEC|2ET_4PI_T0K3N' npm start
+    $ BOT_API_TOKEN='MY_SUP3R:SEC|2ET_4PI_T0K3N' yarn start
     ```
     **Note:** This bot also uses 2 more environment variables.
      - `MONGODB_URI` as a connection string to mongoDB, where the subscriptions are stored.
@@ -47,7 +46,7 @@ Below are the steps required for [Heroku](https://www.heroku.com).
     
     $ heroku git:remote -a five-moods-telegram-bot
     
-    $ git push heroku master
+    $ git push heroku main
     ```
 
 6. Run the following command to avoid the error log message `Error R10 (Boot timeout) -> Web process failed to bind to $PORT within 60 seconds of launch`:
