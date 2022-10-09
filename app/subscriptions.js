@@ -1,4 +1,4 @@
-import {MongoClient} from 'mongodb';
+const MongoClient = require('mongodb').MongoClient
 
 class Subscriptions{
   async add(chat,callback){
@@ -98,4 +98,4 @@ class Subscriptions{
   }
 }
 
-export default Subscriptions;
+module.exports = Subscriptions;
