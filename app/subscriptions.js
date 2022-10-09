@@ -1,119 +1,100 @@
-'use strict';
+const MongoClient = require('mongodb').MongoClient
 const mongodb_uri = process.env.MONGODB_URI;
-const MongoClient = require('mongodb').MongoClient,
-  co = require('co');
 
 class Subscriptions{
-
-  add(chat,callback){
-    co(function*() {
-      //connect to db
-      const db = yield MongoClient.connect(mongodb_uri);
-      console.log("Connected correctly to server");
-
-      // Insert/update a single document
-      yield db.collection('subscribers').updateOne(
+  async add(chat,callback){
+    const client = new MongoClient(mongodb_uri);
+    try {
+      const db = client.db('sv-bot');
+      await db.collection('subscribers').updateOne(
         {id:chat.id},
         {$set:{'firstname': chat.first_name, 'lastname': chat.last_name, 'type': chat.type, 'username': chat.username }},
         { upsert: true}
       );
-
-      // Close connection
-      db.close();
-    }).catch(function(err) {
-      console.log(err.stack);
-    });
+    } finally {
+      await client.close();
+    }
 
     callback();
   }
 
-  addWeekday(chat, weekday, callback){
-    co(function*() {
-      //connect to db
-      const db = yield MongoClient.connect(mongodb_uri);
-      console.log("Connected correctly to server");
+  async addWeekday(chat, weekday, callback){
+    const client = new MongoClient(mongodb_uri);
+    try {
+      const db = client.db('sv-bot');
 
       // Insert/update a single document
-      yield db.collection('subscribers').updateOne(
+      await db.collection('subscribers').updateOne(
         {id:chat.id},
         {$addToSet: {weekdays: weekday}},
         {upsert: true}
       );
-
-      // Close connection
-      db.close();
-    }).catch(function(err) {
-      console.log(err.stack);
-    });
-
+    } finally {
+      // Ensures that the client will close when you finish/error
+      await client.close();
+    }
     callback();
   }
 
-  remove(chatId, callback){
-    co(function*() {
-      //connect to db
-      const db = yield MongoClient.connect(mongodb_uri);
-      console.log("Connected correctly to server");
+  async remove(chatId, callback){
+    const client = new MongoClient(mongodb_uri);
+    try {
+      const db = client.db('sv-bot');
 
       // delete a single document
-      yield db.collection('subscribers').removeOne({id:chatId});
+      await db.collection('subscribers').deleteOne({id:chatId});
 
-      // Close connection
-      db.close();
-    }).catch(function(err) {
-      console.log(err.stack);
-    });
+    } finally {
+      // Ensures that the client will close when you finish/error
+      await client.close();
+    }
     if(typeof callback === 'function') {
       callback();
     }
   }
 
-  getWeekdays(chat,callback){
-    co(function*() {
-      //connect to db
-      const db = yield MongoClient.connect(mongodb_uri);
-      console.log("Connected correctly to server");
-
+  async getWeekdays(chat,callback){
+    const client = new MongoClient(mongodb_uri);
+    try {
+      const db = client.db('sv-bot');
       // Insert/update a single document
       db.collection('subscribers').findOne({ $and: [ {id:chat.id}, {weekdays:{$exists: true}}]},callback);
 
-      // Close connection
-      db.close();
-    }).catch(function(err) {
-      console.log(err.stack);
-    });
+    } finally {
+      // Ensures that the client will close when you finish/error
+      await client.close();
+    }
 
   }
 
-  forAllDailly(next){
-    co(function*() {
-      //connect to db
-      const db = yield MongoClient.connect(mongodb_uri);
+  async forAllDaily(next){
+    const client = new MongoClient(mongodb_uri);
+    try {
+      const db = client.db('sv-bot');
       console.log("Connected correctly to server");
 
       //find all daily subs
       db.collection('subscribers').find({weekdays:{$exists: false}}).forEach(next);
 
-      // Close connection
-      db.close();
-    }).catch(function(err) {
-      console.log(err.stack);
-    });
+    } finally {
+      // Ensures that the client will close when you finish/error
+      await client.close();
+    }
   }
-  forAllParttime(weekdayIndex,next){
-    co(function*() {
-      //connect to db
-      const db = yield MongoClient.connect(mongodb_uri);
+
+  async forAllParttime(weekdayIndex, next){
+    const client = new MongoClient(mongodb_uri);
+    try {
+      const db = client.db('sv-bot');
       console.log("Connected correctly to server");
 
       // find all documents containing a given weekday
       db.collection('subscribers').find({weekdays: weekdayIndex}).forEach(next);
 
-      // Close connection
-      db.close();
-    }).catch(function(err) {
-      console.log(err.stack);
-    });
+    } finally {
+      // Ensures that the client will close when you finish/error
+      await client.close();
+    }
   }
 }
 
