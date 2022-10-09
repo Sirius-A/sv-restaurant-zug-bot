@@ -5,9 +5,9 @@ const cheerio = require('cheerio');
 const SVPageParser = require('../app/SVPageParser');
 
 
-describe('The sv page formatting module', function(){
-    it('formats the menuplan page of 2017-05-02 correctly',function() {
-        let markdownTextExpected = '__\n' +
+describe('The sv page formatting module', function() {
+  it('formats the menuplan page of 2017-05-02 correctly', function() {
+    const markdownTextExpected = '__\n' +
             '*Ofenfrischer Lammgigot*\n' +
             'mit Rosmarinjus dazu Kartoffelgratin ' +
             'und gratinierter Blumenkohl\n' +
@@ -32,37 +32,36 @@ describe('The sv page formatting module', function(){
             '_3.30 100G_\n' +
             '_Herkunft Fleisch: Geflügel / Schweiz_\n\n';
 
-        let menuplanPath = __dirname + "/Menuplan.html";
-        let svPageParser = new SVPageParser();
+    const menuplanPath = __dirname + '/Menuplan.html';
+    const svPageParser = new SVPageParser();
 
-        let $ = cheerio.load(fs.readFileSync(menuplanPath));
-        let offers = $('#menu-plan-tab1').find('.menu-item');
-        let markdownTextActual = svPageParser.formatDayMenu($, offers);
-        assert.equal(markdownTextActual, markdownTextExpected, "Page is formatted to the correct markdown");
-    });
+    const $ = cheerio.load(fs.readFileSync(menuplanPath));
+    const offers = $('#menu-plan-tab1').find('.menu-item');
+    const markdownTextActual = svPageParser.formatDayMenu($, offers);
+    assert.equal(markdownTextActual, markdownTextExpected, 'Page is formatted to the correct markdown');
+  });
 
-    it('replaces markdown syntax characters in the menu',function () {
+  it('replaces markdown syntax characters in the menu', function() {
+    const svPageParser = new SVPageParser();
+    const $ = cheerio.load('<div id=\'menu-plan-tab1\' class=\'menu-plan-grid\'>' +
+            '<div class=\'menu-item\'>' +
+            '<div class=\'menu-title\'>Super-Duper Menu::</div>' +
+            '<div class=\'menu-description\'><p class=\'trimmings\'>A multi line*, <br\><br>' +
+            '*dish</p></div>' +
+            '<div class=\'menu-prices prices-3\'><span class=\'price\'>' +
+            '<span class=\'val\'>18.50</span><span class=\'desc\'>CHF</span>' +
+            '</span></div>' +
+            '</div>'+
+            '</div>',
+    );
+    const markdownTextExpected = '__\n' +
+           '*Super-Duper Menu::*\n' +
+            'A multi line,   dish\n' +
+            '_18.50 CHF_\n\n';
 
-        let svPageParser = new SVPageParser();
-        let $ = cheerio.load("<div id='menu-plan-tab1' class='menu-plan-grid'>" +
-            "<div class='menu-item'>" +
-            "<div class='menu-title'>Super-Duper Menu::</div>" +
-            "<div class='menu-description'><p class='trimmings'>A multi line*, <br\><br>" +
-            "*dish</p></div>" +
-            "<div class='menu-prices prices-3'><span class='price'>" +
-            "<span class='val'>18.50</span><span class='desc'>CHF</span>" +
-            "</span></div>" +
-            "</div>"+
-            "</div>"
-        );
-        let markdownTextExpected = "__\n" +
-           "*Super-Duper Menu::*\n" +
-            "A multi line,   dish\n" +
-            "_18.50 CHF_\n\n";
-
-        let offers = $('#menu-plan-tab1').find('.menu-item');
-        let markdownTextActual = svPageParser.formatDayMenu($, offers);
-        assert.equal(markdownTextActual, markdownTextExpected, "escapes the relevant ");
-    });
+    const offers = $('#menu-plan-tab1').find('.menu-item');
+    const markdownTextActual = svPageParser.formatDayMenu($, offers);
+    assert.equal(markdownTextActual, markdownTextExpected, 'escapes the relevant ');
+  });
 });
 
