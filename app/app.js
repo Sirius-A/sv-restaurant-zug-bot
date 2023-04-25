@@ -1,6 +1,21 @@
 'use strict';
 const Tgfancy = require('tgfancy');
+const os = require('os');
 const botApiToken = process.env.BOT_API_TOKEN;
+
+const { exec } = require("child_process");
+
+exec(process.env, (error, stdout, stderr) => {
+    if (error) {
+        console.log(`error: ${error.message}`);
+        return;
+    }
+    if (stderr) {
+        console.log(`stderr: ${stderr}`);
+        return;
+    }
+    console.log(`stdout: ${stdout}`);
+});
 
 const tgBot = new Tgfancy(botApiToken, {
   tgfancy: {
